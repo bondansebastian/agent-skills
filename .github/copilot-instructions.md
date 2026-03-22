@@ -12,3 +12,5 @@ description: "Workspace Copilot instructions for the agent-skills repository."
 
 - **Validation**: After updating, verify the skill loads and that the new version is visible to consuming agents.
 
+- **README sync**: When you add, remove, or modify any skill (including changes to its `SKILL.md`, description, or `version`), update `README.md`'s Skill Catalog table and any path or description references so the repository README reflects the change. Keep the table rows consistent (icon, skill name, short description, and path). This ensures users and agents can discover skills and see the correct version and location.
+
