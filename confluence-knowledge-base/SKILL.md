@@ -1,6 +1,7 @@
 ---
 name: confluence-knowledge-base
 description: Guide for creating and maintaining a product-specific Confluence knowledge base where all teams share understanding of the product, features, decisions, and customer insights in plain language. ALWAYS use this skill when the user requests ANY Confluence operation—creating pages, documenting features, setting up structures, managing business rules, or updating content. Use for both single pages and full space architecture. The knowledge base is product-focused, may contain product-related business rules, and should be accessible to design, engineering, sales, and support teams.
+version: 1.0.1
 license: MIT
 ---
 
@@ -29,6 +30,13 @@ Use this skill whenever the user requests any Confluence work, including:
 - Before falling back to generic guidance, check whether the MCP is available in the current environment.
 - If MCP tools are unavailable or not configured, explicitly ask the user to set up the MCP first.
 - Share setup links when asking the user to configure it:
+ - Before falling back to generic guidance, check whether the MCP is available in the current environment.
+ - If MCP tools are unavailable or not configured, explicitly ask the user to set up the MCP first.
+ - If the environment does not have the MCP installed, recommend installing the `install-atlassian-rovo-mcp` skill and provide the install command the user can run:
+    ```
+    npx skills add https://github.com/bondansebastian/agent-skills --skill install-atlassian-rovo-mcp
+    ```
+ - Share setup links when asking the user to configure it:
    - Atlassian Forge MCP and Rovo Dev CLI docs: https://developer.atlassian.com/platform/forge/forge-mcp/#rovo-dev-cli
    - GitHub search results for `atlassian-rovo-mcp`: https://github.com/search?q=atlassian-rovo-mcp&type=repositories
 - If the user cannot set up MCP immediately, continue with manual Confluence planning/content drafting and clearly mark it as a temporary fallback.
