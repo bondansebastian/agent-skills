@@ -4,7 +4,7 @@
 ![Status](https://img.shields.io/badge/Status-Active-22c55e?style=for-the-badge)
 ![Format](https://img.shields.io/badge/Format-SKILL.md-f59e0b?style=for-the-badge)
 
-> A curated collection of reusable agent skills that encode domain expertise, workflows, and high-quality execution patterns.
+> An opinionated, curated collection of reusable agent skills that encode domain expertise, workflows, and high-quality execution patterns.
 
 ## What This Repository Is
 
@@ -21,13 +21,16 @@ Each skill lives in its own folder and contains a `SKILL.md` file with:
 | Icon | Skill | Description | Path |
 |---|---|---|---|
 | 📚 | Confluence Knowledge Base | Build and maintain a product-focused Confluence knowledge base that is accessible to design, engineering, sales, and support. | [confluence-knowledge-base/SKILL.md](confluence-knowledge-base/SKILL.md) |
+| 🔌 | Install Atlassian Rovo MCP | Guide users through Atlassian Rovo MCP installation with setup discovery first, then project-local or multi-project instructions tailored to OS/runtime (Windows, WSL, macOS, Linux). | [install-atlassian-rovo-mcp/SKILL.md](install-atlassian-rovo-mcp/SKILL.md) |
 
 ## Repository Layout
 
 ```text
 agent-skills/
 ├── README.md
-└── confluence-knowledge-base/
+├── confluence-knowledge-base/
+│   └── SKILL.md
+└── install-atlassian-rovo-mcp/
     └── SKILL.md
 ```
 
