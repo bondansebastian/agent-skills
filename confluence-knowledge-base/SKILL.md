@@ -1,7 +1,6 @@
 ---
 name: confluence-knowledge-base
 description: Guide for creating and maintaining a product-specific Confluence knowledge base where all teams share understanding of the product, features, decisions, and customer insights in plain language. ALWAYS use this skill when the user requests ANY Confluence operation—creating pages, documenting features, setting up structures, managing business rules, or updating content. Use for both single pages and full space architecture. The knowledge base is product-focused, may contain product-related business rules, and should be accessible to design, engineering, sales, and support teams.
-version: 1.0.0
 license: MIT
 ---
 
