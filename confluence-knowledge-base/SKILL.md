@@ -5,232 +5,266 @@ version: 1.0.0
 license: MIT
 ---
 
-# Confluence Knowledge Base — Skill
+# Confluence Knowledge Base
 
-Purpose
--------
-Build a product-specific knowledge base in Confluence where the team shares a single source of truth about the product, its features, customer insights, product-related business rules, and decisions. Written in plain language accessible to all teams (design, engineering, sales, support).
+Use this skill to design, create, update, and govern a product-focused Confluence knowledge base that is understandable across design, engineering, sales, and support.
 
-When to use
------------
-- User requests any Confluence operation (creating pages, documenting features, managing rules, etc.)
-- Documenting product features and how they work
-- Recording product decisions and their rationale
-- Documenting product-specific business rules (pricing, access, constraints)
-- Capturing customer insights and use cases related to the product
-- Creating shared understanding of the product across departments
+## Goal
 
-Space Skeleton
---------------
-📁 [Product Name] Knowledge Base
-│
-├── 🏠 Home (Quick links, upcoming reviews, key contacts)
-│
-├── 📋 Product Overview
-│   ├── What We Built & Why
-│   ├── Key Terminology (Glossary)
-│   ├── Customer Problems Solved
-│   └── Success Metrics
-│
-├── ⚙️ Features
-│   └── [Feature Name]
-│       ├── What It Is & Why We Built It
-│       ├── Customer Problem Solved
-│       ├── How It Works (Overview for all roles)
-│       ├── Key Product Rules
-│       ├── Design & User Experience
-│       ├── Launch Plan & Timeline
-│       └── Decisions Made & Alternatives Considered
-│
-├── 📊 Product Rules & Constraints
-│   ├── Rules Index
-│   ├── Pricing & Access Rules
-│   ├── Feature Limitations & Why
-│   └── Edge Cases
-│
-├── 🎯 Customer Knowledge
-│   ├── Use Cases & Success Stories
-│   ├── Customer Feedback & Insights
-│   └── Common Questions & Issues
-│
-├── 📅 Releases & Updates
-│   ├── Communication Guidelines
-│   ├── Escalation Procedures
-│   └── Incident & Issue Resolution
-│
-└── 📅 Releases & Announcements
-    ├── Latest Updates
-    └── [Release Name] Information
+Build and maintain a single source of truth for product features, customer insights, product decisions, and product-specific business rules in plain language.
 
-Key Practices
--------------
-1. Product Rules Index
-   - Master table showing: Rule | Why It Exists | Affected Feature | Priority | Owner | Last Reviewed
-   - Written in plain language anyone can understand, not technical jargon
-   - Links to the features that enforce or depend on each rule
-   - Focus on product constraints and behaviors (not internal implementation)
+## When To Use
 
-2. Feature Page Template (use for every feature)
-   - Status (Draft / Approved / Active / Retired) — clear badge at top
-   - Page owner assigned (required)
-   - Quick summary: "What is it?" and "Why did we build it?" (2-3 sentences)
-   - Customer problem it solves
-   - How it works (visual overview; avoid technical implementation details)
-   - Key product rules and constraints that apply
-   - Design & user experience (embed Figma mockups)
-   - Launch timeline and rollout plan
-   - Decision log explaining choices and alternatives considered
-   - Last reviewed date and next review date
+Use this skill whenever the user requests any Confluence work, including:
 
-3. Organization & Navigation
-   - Keep depth shallow: 3-4 levels maximum
-   - Use consistent naming across all pages
-   - Focus on product-related content only (internal processes belong in separate space if needed)
-   - Create clear indexes so people can find what they need
+- Creating pages or full Confluence space structures
+- Documenting product features and behavior
+- Recording product decisions and rationale
+- Managing product-specific business rules (pricing, access, constraints)
+- Capturing customer insights and use cases
+- Improving discoverability, consistency, and governance of product documentation
 
-4. Linking & Cross-References
-   - Link related features instead of duplicating information
-   - Connect features to the customer problems they solve
-   - Link product rules to the features that enforce them
-   - Embed visual assets (Figma, mockups, diagrams) directly
+## MCP Default Requirement
 
-5. Governance & Maintenance
-   - Assign a single owner to each page (required field)
-   - Schedule quarterly reviews; owners responsible for keeping info current
-   - Add a "Last Reviewed" date visible on every page
-   - Mark outdated content as "Archived" — never delete, always preserve history
-   - Use simple language; avoid internal jargon or explain it in a glossary
+- Use `atlassian-rovo-mcp` as the default integration path for Confluence operations in this skill.
+- Before falling back to generic guidance, check whether the MCP is available in the current environment.
+- If MCP tools are unavailable or not configured, explicitly ask the user to set up the MCP first.
+- Share setup links when asking the user to configure it:
+   - Atlassian Forge MCP and Rovo Dev CLI docs: https://developer.atlassian.com/platform/forge/forge-mcp/#rovo-dev-cli
+   - GitHub search results for `atlassian-rovo-mcp`: https://github.com/search?q=atlassian-rovo-mcp&type=repositories
+- If the user cannot set up MCP immediately, continue with manual Confluence planning/content drafting and clearly mark it as a temporary fallback.
 
-Feature Page Template
----------------------
-Page Title: `[Feature Name] — Short description`
+## Core Principles
 
-Quick Info Box (at top):
-- Status: ☑️ Active / 📋 Draft / 🗺️ Planned / 🗄️ Retired
-- Owner: Name or Team
+- Write for a broad audience; avoid jargon or explain it in a glossary.
+- Keep content product-focused (what and why), not implementation-focused (how code is built).
+- Prefer linking over duplication; maintain one source of truth.
+- Keep navigation shallow (3-4 levels max).
+- Every page has an owner and a visible last review date.
+- Archive outdated content instead of deleting it.
+
+## Space Skeleton
+
+Use this as the default space blueprint:
+
+```text
+[Product Name] Knowledge Base/
+|- Home (quick links, upcoming reviews, key contacts)
+|- Product Overview/
+|  |- What We Built & Why
+|  |- Key Terminology (Glossary)
+|  |- Customer Problems Solved
+|  `- Success Metrics
+|- Features/
+|  `- [Feature Name]/
+|     |- What It Is & Why We Built It
+|     |- Customer Problem Solved
+|     |- How It Works (overview for all roles)
+|     |- Key Product Rules
+|     |- Design & User Experience
+|     |- Launch Plan & Timeline
+|     `- Decisions Made & Alternatives Considered
+|- Product Rules & Constraints/
+|  |- Rules Index
+|  |- Pricing & Access Rules
+|  |- Feature Limitations & Why
+|  `- Edge Cases
+|- Customer Knowledge/
+|  |- Use Cases & Success Stories
+|  |- Customer Feedback & Insights
+|  `- Common Questions & Issues
+|- Releases & Updates/
+|  |- Communication Guidelines
+|  |- Escalation Procedures
+|  `- Incident & Issue Resolution
+`- Releases & Announcements/
+   |- Latest Updates
+   `- [Release Name] Information
+```
+
+## Required Practices
+
+### 1) Product Rules Index
+
+- Maintain a master table with: Rule, Why It Exists, Affected Feature, Priority, Owner, Last Reviewed.
+- Use plain language, not technical internals.
+- Link each rule to features that enforce or depend on it.
+- Focus on product behavior and constraints.
+
+### 2) Feature Page Template
+
+Apply this structure for every feature page:
+
+- Status badge at top (Draft / Approved / Active / Retired)
+- Required page owner
+- 2-3 sentence summary: what it is and why it was built
+- Customer problem solved
+- How it works (visual and plain language)
+- Product rules and constraints
+- Design and UX assets (Figma/screenshots)
+- Launch timeline and rollout plan
+- Decision log with alternatives considered
+- Last reviewed and next review dates
+
+### 3) Organization & Navigation
+
+- Keep hierarchy shallow (3-4 levels maximum).
+- Use consistent naming conventions.
+- Keep internal process docs out of this space unless directly product-related.
+- Create index pages for high-traffic sections.
+
+### 4) Linking & Cross-References
+
+- Link related features instead of duplicating text.
+- Link customer problems to the features that solve them.
+- Link product rules to affected features.
+- Embed visuals directly (Figma, mockups, diagrams).
+
+### 5) Governance & Maintenance
+
+- Assign exactly one owner per page.
+- Schedule quarterly reviews.
+- Show Last Reviewed prominently on each page.
+- Mark stale pages as Archived; preserve history.
+- Keep language clear and accessible to non-engineering audiences.
+
+## Confluence Formatting Conventions
+
+- Use Confluence Status macros for lifecycle state (Draft / Active / Archived).
+- Use icons or emojis to improve scanability where helpful.
+- Add labels to pages (for example: sales, feature, archived, needs-review).
+- Keep layout and section order consistent across similar page types.
+- Prefer visual artifacts (flowcharts, screenshots, mockups) over long prose.
+
+## Feature Page Template
+
+Page title:
+
+`[Feature Name] - Short description`
+
+Quick info box at top:
+
+- Status: Active / Draft / Planned / Retired
+- Owner: Name or team
 - Last Reviewed: YYYY-MM-DD
 - Next Review: YYYY-MM-DD
 
-Main Sections:
-1. **What & Why** (1-2 paragraphs)
-   - What is this feature?
-   - What customer problem does it solve?
-   - Why is it valuable to our customers?
+Main sections:
 
-2. **How It Works** (Overview for all functions)
-   - Explain in simple terms how users interact with it
-   - Include visuals (screenshots, mockups, flowcharts)
-   - Avoid internal technical implementation details
+1. **What & Why**
+- What is this feature?
+- What customer problem does it solve?
+- Why is it valuable to customers?
+
+2. **How It Works**
+- Explain in simple terms how users interact with it.
+- Include visuals (screenshots, mockups, flowcharts).
+- Avoid internal implementation detail.
 
 3. **Product Rules & Constraints**
-   - Important product rules that apply to this feature
-   - Limitations or restrictions (what users can't do and why)
-   - Access or availability constraints
+- Rules that apply to this feature
+- Limitations or restrictions and why they exist
+- Access or availability constraints
 
 4. **Design & User Experience**
-   - Embed Figma mockups or screenshots
-   - Key user workflows shown visually
+- Embed Figma mockups or screenshots
+- Show key workflows visually
 
 5. **Launch & Timeline**
-   - When is/was it launched?
-   - Rollout plan if phased
-   - Customer communication approach
+- Launch date or plan
+- Phased rollout details
+- Customer communication approach
 
 6. **Decisions & Alternatives**
-   - What were the key product choices?
-   - What alternatives were considered and why were they rejected?
-   - Who made the decision and when?
+- Key choices
+- Alternatives considered and rejected
+- Decision makers and dates
 
 7. **Related Information**
-   - Links to customer use cases or success stories
-   - Links to related features
-   - Links to product rules that affect it
+- Links to customer use cases and success stories
+- Links to related features
+- Links to product rules that affect the feature
 
-Product Rules Index — Example Columns
---------------------------------------
+## Product Rules Index Example
+
 | Rule | Plain Language Explanation | Why It Exists | Affects Which Feature(s) | Priority | Owner | Last Reviewed |
 |---|---|---|---|---|---|---|
 | PR-001 | Users can only have one active account at a time | Fraud prevention and data integrity | Account Management | High | Product Team | 2026-01-15 |
-| PR-002 | Free users see ads; paid users don't | Revenue model and user experience differentiation | Subscriptions | High | Product Team | 2026-02-01 |
+| PR-002 | Free users see ads; paid users do not | Revenue model and user experience differentiation | Subscriptions | High | Product Team | 2026-02-01 |
 
-Simple Formatting & Organization
-----------------------------------
-- Use Confluence Status macros for page lifecycle visibility (Draft / Active / Archived)
-- Use visually engaging icons or emojis where possible to improve scanability and section clarity.
-- Assign page owners so people know who to ask questions
-- Put "Last Reviewed" date at top so everyone knows if content is current
-- Add labels to pages for easy filtering (e.g., "sales", "feature", "archived", "needs-review")
-- Use visuals: flowcharts, screenshots, mockups — they communicate faster than text
-- Keep consistent formatting so pages feel like a unified knowledge base
+## Page Health Checklist
 
-Page Health Checklist
----------------------
-Before publishing or after quarterly review, confirm:
-- ✅ Page has a clear owner assigned (who do I contact with questions?)
-- ✅ Last Reviewed date is recent (within 90 days)
-- ✅ Status is set clearly (Active / Draft / Archived)
-- ✅ Content is written for a broad audience (not jargon-heavy)
-- ✅ Key visuals are present (mockups, flowcharts, screenshots)
-- ✅ Related pages are linked (connects the knowledge base)
-- ✅ Decision rationale is documented (explains the "why")
+Before publishing or after quarterly review, verify:
 
-Common Pitfalls & Fixes
------------------------
+- Page has a clear owner.
+- Last Reviewed is recent (within 90 days).
+- Status is set (Active / Draft / Archived).
+- Content is understandable to non-specialists.
+- Key visuals are present.
+- Related pages are linked.
+- Decision rationale is documented.
+
+## Common Pitfalls And Fixes
+
 | Problem | Solution |
-|---------|----------|
-| Info duplicated across multiple pages | Create one "source of truth" page and link to it from other pages |
-| Nobody ever updates the knowledge base | Assign owners and tie updates to quarterly reviews; remind them on calendar |
-| Pages are too technical; only engineers understand them | Rewrite for a general audience; create a glossary for unavoidable terms |
-| Too many nested pages; hard to navigate | Flatten structure to 3-4 levels; use clear section titles on main pages |
-| Business decisions buried in Slack or emails | Policy: Decisions go in Confluence with rationale; Slack is for discussion only |
-| No consistency in how pages are formatted | Create and enforce simple templates; all feature pages look similar |
-| Pages become outdated and wrong | Assign owners responsible for quarterly reviews; add visible "Last Reviewed" date
+|---|---|
+| Information duplicated across pages | Create one source-of-truth page and link to it |
+| Nobody updates the knowledge base | Assign owners and tie updates to quarterly reviews |
+| Pages are too technical | Rewrite for general audience and add glossary terms |
+| Deep page nesting makes navigation hard | Flatten to 3-4 levels and improve top-level indexes |
+| Decisions buried in chat/email | Require that decisions and rationale live in Confluence |
+| Inconsistent page formatting | Enforce shared templates and section order |
+| Pages become stale | Make owner accountable for recurring review and status updates |
 
-How the skill should be used by agents
--------------------------------------
-- **On any Confluence operation request:** Use this skill to guide documentation structure, tone, and organization.
-- When creating or updating a feature page, use the Feature Page Template and keep language accessible to all team members.
-- When adding product rules, update the Rules Index with plain-language explanations and link affected features.
-- When documenting product decisions, focus on the "why" and alternatives considered, not internal implementation details.
-- When reviewing knowledge base content, ensure it's understandable to someone outside engineering (not overly technical).
+## Agent Execution Guidance
 
-Examples
---------
-**Example Product Rule:**
-- Rule: "Free users can only have 3 saved items; paid users unlimited"
-- Why: Storage and infrastructure costs; incentivizes premium upgrade
+On any Confluence request:
+
+- Apply this skill's structure, tone, and governance rules.
+- Use the Feature Page Template for feature pages.
+- Update the Rules Index when rules are added or changed.
+- Emphasize why decisions were made and what alternatives were rejected.
+- Ensure all output is understandable outside engineering.
+
+## Examples
+
+Example product rule:
+
+- Rule: Free users can only have 3 saved items; paid users have unlimited
+- Why: Storage and infrastructure costs; supports premium upgrade
 - Affects: Search, Saved Items, Subscription features
 - Priority: High
 - Owner: Product Team
 - Last Reviewed: 2026-02-01
 
-**Example Feature Page Titles:**
-- "Smart Search — How It Finds What You Need"
-- "Collections — Organize Content You Love"
-- "Premium Subscription — What Paid Users Get"
+Example feature page titles:
 
-Maintenance & Review Process
------------------------------
-- Every page has an owner; that person is responsible for keeping it accurate.
-- Set up calendar reminders for quarterly reviews (every 3 months).
-- During a review, the owner confirms: "Is this still accurate? Has anything changed?"
-- Update the "Last Reviewed" date after each review.
-- Create a simple dashboard (Home page) showing which pages are due for review.
-- Have a team member periodically spot-check pages to ensure accuracy and readability.
+- Smart Search - How It Finds What You Need
+- Collections - Organize Content You Love
+- Premium Subscription - What Paid Users Get
 
-Appendix — Quick Start Template
---------------------------------
-When creating a new page, start with this structure:
+## Maintenance And Review Process
 
-```
-Title: [Feature Name] — [1-line description]
+- Every page has a named owner.
+- Set recurring quarterly calendar reminders.
+- In each review, confirm accuracy and changes since the last update.
+- Update Last Reviewed after each review.
+- Keep a home/dashboard view of pages due for review.
+- Run periodic spot-checks for readability and correctness.
+
+## Quick Start Page Template
+
+Use this scaffold when creating a new feature page:
+
+```markdown
+Title: [Feature Name] - [1-line description]
 
 STATUS: [Draft / Active / Planned / Archived]
 OWNER: [Name/Team]
 LAST REVIEWED: [Date]
 
 ## What & Why
-[2-3 sentences explaining what this feature is and why it matters to customers]
+[2-3 sentences describing what this feature is and why it matters]
 
 ## How It Works
 [Simple overview with visuals]
@@ -246,20 +280,20 @@ LAST REVIEWED: [Date]
 [When launched / planned]
 
 ## Decisions Made
-- Decision 1: Why we chose this, what we rejected
-- Decision 2: Why we chose this, what we rejected
+- Decision 1: Why chosen, what was rejected
+- Decision 2: Why chosen, what was rejected
 
 ## Related Features
 - Link to feature/rule X
 - Link to feature/rule Y
 ```
 
-Tips for Product Knowledge Base Success
-----------------------------------------
-- **Start simple:** Don't try to document everything at once. Begin with your most important features.
-- **Use plain language:** If someone from Sales, Design, or Support wouldn't understand it, rewrite it.
-- **Product focus:** Document what the product does and why, not how it's built. Internal processes belong elsewhere.
-- **Make it visual:** Screenshots, flowcharts, mockups, and Figma embeds help communicate faster than paragraphs.
-- **Link generously:** Connect features to the problems they solve; link rules to the features that enforce them.
-- **Review regularly:** Outdated knowledge is worse than no knowledge. Assign owners and hold them accountable with quarterly reviews.
-- **Involve all voices:** Get input from support, sales, design, and engineering so the knowledge base captures all perspectives.
+## Success Tips
+
+- Start with the highest-value features first.
+- Rewrite until Sales, Support, Design, and Engineering can all follow the page.
+- Keep documentation centered on product behavior and customer value.
+- Prefer visual communication where possible.
+- Link generously across related pages.
+- Review regularly; stale documentation is harmful.
+- Include cross-functional input so the knowledge base reflects real user impact.
