@@ -18,11 +18,11 @@ Each skill lives in its own folder and contains a `SKILL.md` file with:
 
 ## Skill Catalog
 
-| Icon | Skill | Description | Path |
-|---|---|---|---|
-| 📚 | Confluence Knowledge Base | Build and maintain a product-focused Confluence knowledge base that is accessible to design, engineering, sales, and support. | [confluence-knowledge-base/SKILL.md](confluence-knowledge-base/SKILL.md) |
-| 🔌 | Install Atlassian Rovo MCP | Guide users through Atlassian Rovo MCP installation with setup discovery first, then project-local or multi-project instructions tailored to OS/runtime (Windows, WSL, macOS, Linux). | [install-atlassian-rovo-mcp/SKILL.md](install-atlassian-rovo-mcp/SKILL.md) |
-| 🧭 | Jira | Natural-language Jira assistant for viewing, creating, and updating issues, supporting CLI and MCP backends. (Forked from npx skills add https://github.com/davila7/claude-code-templates --skill jira) | [jira/SKILL.md](jira/SKILL.md) |
+| Icon | Skill | Description | Path | Install |
+|---|---|---|---|---|
+| 📚 | Confluence Knowledge Base | Build and maintain a product-focused Confluence knowledge base that is accessible to design, engineering, sales, and support. | [confluence-knowledge-base/SKILL.md](confluence-knowledge-base/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill confluence-knowledge-base` |
+| 🔌 | Install Atlassian Rovo MCP | Guide users through Atlassian Rovo MCP installation with setup discovery first, then project-local or multi-project instructions tailored to OS/runtime (Windows, WSL, macOS, Linux). | [install-atlassian-rovo-mcp/SKILL.md](install-atlassian-rovo-mcp/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill install-atlassian-rovo-mcp` |
+| 🧭 | Jira | Natural-language Jira assistant for viewing, creating, and updating issues, supporting CLI and MCP backends. (Forked from npx skills add https://github.com/davila7/claude-code-templates --skill jira) | [jira/SKILL.md](jira/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill jira` |
 
 ## Repository Layout
 
