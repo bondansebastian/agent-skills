@@ -18,11 +18,13 @@ Each skill lives in its own folder and contains a `SKILL.md` file with:
 
 ## Skill Catalog
 
-| Icon | Skill | Description | Path | Install |
-|---|---|---|---|---|
-| 📚 | Confluence Knowledge Base | Build and maintain a product-focused Confluence knowledge base that is accessible to design, engineering, sales, and support. | [confluence-knowledge-base/SKILL.md](confluence-knowledge-base/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill confluence-knowledge-base` |
-| 🔌 | Install Atlassian Rovo MCP | Guide users through Atlassian Rovo MCP installation with setup discovery first, then project-local or multi-project instructions tailored to OS/runtime (Windows, WSL, macOS, Linux). | [install-atlassian-rovo-mcp/SKILL.md](install-atlassian-rovo-mcp/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill install-atlassian-rovo-mcp` |
-| 🧭 | Jira | Natural-language Jira assistant for viewing, creating, and updating issues, supporting CLI and MCP backends. (Forked from https://github.com/davila7/claude-code-templates/cli-tool/components/skills/ai-research/jira) | [jira/SKILL.md](jira/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill jira` |
+| Skill | Description | Path | Install |
+|---|---|---|---|
+| 📚 Confluence Knowledge Base | Build and maintain a product-focused Confluence knowledge base that is accessible to design, engineering, sales, and support. | [confluence-knowledge-base/SKILL.md](confluence-knowledge-base/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill confluence-knowledge-base` |
+| 🔌 Install Atlassian Rovo MCP | Guide users through Atlassian Rovo MCP installation with setup discovery first, then project-local or multi-project instructions tailored to OS/runtime (Windows, WSL, macOS, Linux). | [install-atlassian-rovo-mcp/SKILL.md](install-atlassian-rovo-mcp/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill install-atlassian-rovo-mcp` |
+| 🧭 Jira | Natural-language Jira assistant for viewing, creating, and updating issues, supporting CLI and MCP backends. (Forked from https://github.com/davila7/claude-code-templates/cli-tool/components/skills/ai-research/jira) | [jira/SKILL.md](jira/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill jira` |
+| 🐘 Laravel 7 Guidelines | Coding guidelines and best practices for Laravel 7.x projects covering Eloquent, routing, validation, security, testing, and frontend. | [laravel7-guidelines/SKILL.md](laravel7-guidelines/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill laravel7-guidelines` |
+| 🐘 Laravel 8.x – Coding Guidelines & Best Practices | Coding guidelines and best practices for Laravel 8.x projects covering Eloquent, routing, validation, security, testing, and queues. | [laravel8-guidelines/SKILL.md](laravel8-guidelines/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill laravel8-guidelines` |
 
 ## Repository Layout
 
@@ -36,6 +38,23 @@ agent-skills/
 │   └── references/
 │       ├── commands.md
 │       └── mcp.md
+├── laravel7-guidelines/
+│   ├── SKILL.md
+│   └── references/
+│       ├── database.md
+│       ├── eloquent.md
+│       ├── frontend.md
+│       ├── routing-controllers.md
+│       ├── security.md
+│       ├── testing.md
+│       └── validation.md
+├── laravel8-guidelines/
+│   ├── SKILL.md
+│   └── references/
+│       ├── eloquent.md
+│       ├── queues-jobs.md
+│       ├── security.md
+│       └── testing.md
 └── install-atlassian-rovo-mcp/
     └── SKILL.md
 ```
