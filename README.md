@@ -46,7 +46,6 @@ agent-skills/
 - Better speed: reduce back-and-forth by giving agents concrete execution guidance.
 - Better consistency: standardize outputs across repeated task types.
 - Better collaboration: capture team knowledge in a reusable format.
-## License
 
 ## License
 
