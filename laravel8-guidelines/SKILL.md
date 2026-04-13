@@ -1,5 +1,5 @@
 ---
-name: laravel-8
+name: laravel8-guidelines
 description: >
   Coding guidelines, best practices, and conventions for Laravel 8.x projects. Use this skill
   whenever the user asks about Laravel 8 code structure, architecture, naming conventions, routing,
