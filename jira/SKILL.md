@@ -1,7 +1,7 @@
 ---
 name: jira
 description: Use when the user mentions Jira issues (e.g., "PROJ-123"), asks about tickets, wants to create/view/update issues, check sprint status, or manage their Jira workflow. Triggers on keywords like "jira", "issue", "ticket", "sprint", "backlog", or issue key patterns.
-version: 1.0.1
+version: 1.0.2
 license: MIT
 ---
 
@@ -98,6 +98,27 @@ When a user mentions an issue key in conversation:
 3. Show current vs proposed changes
 4. Get approval before updating
 5. Add comment explaining changes
+
+---
+
+## Working on issues, PRs, and commits
+
+- **Always create a PR when asked to work on an issue.** When the user asks you to work on a Jira issue, open a pull request for the work. Include the issue key in branch names and PR titles (for example: `PROJ-123/short-desc`), reference the issue key in the PR description, and include relevant acceptance criteria in the PR body.
+
+- **Subtask rule:** If the referenced issue has subtasks, treat each subtask as an independent unit of work:
+   - Create a branch for the subtask and make a single, focused commit for that subtask. Include the subtask key in the commit message.
+   - Open a PR for the subtask and reference both the subtask and its parent issue in the PR description.
+   - After the subtask PR is merged, re-evaluate the parent issue's acceptance criteria. Update the parent issue (comment, checklist, or transition) to reflect fulfilled acceptance criteria and call out remaining items if any.
+
+- **Epic rule:** If the referenced issue is an epic, iterate its child tasks and treat each task like a unit of work:
+   - For each child task: create a branch, make a single commit for the task, open a PR referencing the task and the epic, and follow the Subtask rule for any subtasks the task may have.
+   - After each task is completed and merged, re-evaluate the epic's acceptance criteria and update the epic accordingly.
+
+- **Verification & safety:**
+   - Always fetch the issue structure (subtasks, parent, epic links) before starting work.
+   - Show the planned branches/PRs to the user and get approval before creating them.
+   - Verify acceptance criteria updates on the parent/epic after each merge and preserve original issue content via comments or history.
+
 
 ---
 
