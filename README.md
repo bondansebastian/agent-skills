@@ -25,6 +25,7 @@ Each skill lives in its own folder and contains a `SKILL.md` file with:
 | 🧭 Jira | Natural-language Jira assistant (v1.0.2) for viewing, creating, and updating issues, supporting CLI and MCP backends. (Forked from https://github.com/davila7/claude-code-templates/cli-tool/components/skills/ai-research/jira) | [jira/SKILL.md](jira/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill jira` |
 | 🐘 Laravel 7 Guidelines | Coding guidelines and best practices for Laravel 7.x projects covering Eloquent, routing, validation, security, testing, and frontend. | [laravel7-guidelines/SKILL.md](laravel7-guidelines/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill laravel7-guidelines` |
 | 🐘 Laravel 8.x – Coding Guidelines & Best Practices | Coding guidelines and best practices for Laravel 8.x projects covering Eloquent, routing, validation, security, testing, and queues. | [laravel8-guidelines/SKILL.md](laravel8-guidelines/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill laravel8-guidelines` |
+| 🎨 UI/UX Best Practices | Ensure every clickable element gives visual feedback on hover; prefer smoothly animated micro-interactions, accessible motion preferences, and practical examples. | [ui-ux-best-practices/SKILL.md](ui-ux-best-practices/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill ui-ux-best-practices` |
 
 ## Repository Layout
 
@@ -55,6 +56,8 @@ agent-skills/
 │       ├── queues-jobs.md
 │       ├── security.md
 │       └── testing.md
+├── ui-ux-best-practices/
+│   └── SKILL.md
 └── install-atlassian-rovo-mcp/
     └── SKILL.md
 ```
