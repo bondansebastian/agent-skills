@@ -1,3 +1,9 @@
+---
+name: react-best-practices
+description: "Opinionated React component architecture: SRP-driven splits, colocation, state isolation, explicit props, re-exported types, naming conventions, and practical file-size targets for maintainable components."
+version: 1.0.1
+---
+
 # React Best Practices Skill
 
 ## When to use this skill
@@ -112,7 +118,7 @@ export type { ContentIdeaData } from "./types";
 export { IdeaCard } from "./idea-card"; // if needed
 ```
 
-This means consumers that use `import type { ContentIdeaData } from "@/components/idea/idea-card"` continue to work without changes after the folder split.
+This means consumers that use `import type { ContentIdeaData } from "@/components/ideas/idea-card"` continue to work without changes after the folder split.
 
 ---
 
