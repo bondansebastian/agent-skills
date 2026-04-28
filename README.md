@@ -27,6 +27,7 @@ Each skill lives in its own folder and contains a `SKILL.md` file with:
 | 🐘 Laravel 8.x – Coding Guidelines & Best Practices | Coding guidelines and best practices for Laravel 8.x projects covering Eloquent, routing, validation, security, testing, and queues. | [laravel8-guidelines/SKILL.md](laravel8-guidelines/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill laravel8-guidelines` |
 | 🎨 UI/UX Best Practices | Ensure every clickable element gives visual feedback on hover; prefer smoothly animated micro-interactions, accessible motion preferences, and practical examples. | [ui-ux-best-practices/SKILL.md](ui-ux-best-practices/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill ui-ux-best-practices` |
 | ⚛️ React Best Practices | Opinionated React component architecture: SRP-driven splits, colocation, state isolation, explicit props, re-exported types, naming conventions, and practical file-size targets. | [react-best-practices/SKILL.md](react-best-practices/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill react-best-practices` |
+| 🧠 Agent Instructor | Refine or create AI/LLM agent instruction files (AGENTS.md, CLAUDE.md, copilot-instructions.md, .github/instructions) with zero information loss, machine-parsable structure, and token efficiency. | [agent-instructor/SKILL.md](agent-instructor/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill agent-instructor` |
 
 ## Repository Layout
 
@@ -64,7 +65,9 @@ agent-skills/
 │       └── rules/
 ├── ui-ux-best-practices/
 │   └── SKILL.md
-└── install-atlassian-rovo-mcp/
+├── install-atlassian-rovo-mcp/
+│   └── SKILL.md
+└── agent-instructor/
     └── SKILL.md
 ```
 
