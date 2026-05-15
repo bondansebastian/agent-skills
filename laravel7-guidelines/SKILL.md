@@ -131,3 +131,13 @@ php artisan route:cache
 php artisan view:cache
 php artisan optimize
 ```
+
+### Command Naming Collision Guardrail
+
+- **Rule:** Custom Artisan command classes must not declare a property named `$name` and must not define a non-static method named `getDefaultName()`. These identifiers collide with inherited Symfony `Command` internals and can cause a fatal runtime error during command discovery/bootstrap.
+- **Failure mode:** Runtime fatal error during command discovery/bootstrap (class loading), typically originating from the Symfony Console component.
+- **Safe naming patterns:**
+  - Use option-prefixed property names such as `inputEmail`, `inputName`, `inputPassword` instead of `$name`.
+  - Use helper method names like `resolveDefaultName()` instead of `getDefaultName()`.
+- **Implementation checklist:** Before finalizing a new command, verify no inherited member-name collisions exist (search for `$name` and `getDefaultName()` in the class and base types).
+- **Testing note:** Add at least one command-invocation smoke test (for example run `php artisan list` or instantiate the Console `Application`) to catch bootstrap-level failures early.
