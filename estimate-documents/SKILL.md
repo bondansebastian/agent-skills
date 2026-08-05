@@ -1,7 +1,7 @@
 ---
 name: estimate-documents
-description: "Use when creating, naming, renaming, or filling in the metadata table of estimate documents under docs/estimates/ — covers date-prefixed filenames keyed to the Date of assessment field and the required AI Estimate metadata row."
-version: 1.0.0
+description: "Use when creating, naming, renaming, or filling in the metadata table of estimate documents under docs/estimates/ — covers date-prefixed filenames keyed to the Date of assessment field, the required AI Estimate metadata row, and the required Scope/Assumptions/Breakdown structure. Always trigger when the user asks to write, draft, or create an estimate."
+version: 1.2.0
 ---
 
 # Estimate Documents Skill
@@ -14,6 +14,8 @@ Load this skill when you are:
 - Renaming an estimate document after its `Date of assessment` changes
 - Writing or reviewing an estimate document's metadata table
 - Adding an entry to `docs/QUOTES.md`
+
+**This skill must always trigger whenever the user asks the agent to write, draft, or create an estimate** — even if the request doesn't mention filenames, metadata, or `docs/estimates/` directly.
 
 ---
 
@@ -32,6 +34,29 @@ docs/estimates/YYYY-MM-DD-<client>-<short-slug>.md
 
 ---
 
+## Document Structure
+
+Every estimate document must follow this structured format, in order:
+
+1. **Metadata table** — see [Metadata: AI Estimate](#metadata-ai-estimate) below.
+2. **Scope** — what work is being estimated, in plain terms.
+3. **Assumptions** — see [Assumptions](#assumptions) below. Required even if short.
+4. **Breakdown** — the tasks or phases that make up the estimate, each with its own time figure, summing to the top-level `AI Estimate`.
+
+Don't skip or reorder sections. A document missing an Assumptions section is incomplete, even if the metadata table and breakdown are otherwise correct.
+
+---
+
+## Assumptions
+
+Every estimate document must state the assumptions held while writing the estimate — the conditions the estimate depends on that, if false, would change the number. Put these in an **Assumptions** section immediately after Scope, as a bullet list.
+
+- Capture things like: existing code/infra the work builds on, access or credentials assumed to be available, scope boundaries (what's explicitly *not* included), third-party dependencies assumed stable, and any open questions being estimated optimistically.
+- Write assumptions as falsifiable statements ("Assumes the existing auth middleware is reused unmodified"), not hedges ("might need more time").
+- If there are truly no assumptions beyond the stated scope, say so explicitly (`No assumptions beyond the stated scope.`) rather than omitting the section.
+
+---
+
 ## Metadata: AI Estimate
 
 Every estimate document's metadata table must report an **AI Estimate** in place of the `Estimate` row (do not include a separate `Human Estimate` row):
@@ -47,6 +72,8 @@ Every estimate document's metadata table must report an **AI Estimate** in place
 | Creating a new estimate | Write to `docs/estimates/YYYY-MM-DD-<client>-<slug>.md` using today's `Date of assessment` |
 | `Date of assessment` changes | `git mv` the file (and its linked folder, if any) to the new date |
 | Filling in the metadata table | Include one `AI Estimate` row; omit `Estimate` and `Human Estimate` |
+| Writing the document body | Follow Metadata → Scope → Assumptions → Breakdown, in that order |
+| Stating assumptions | List falsifiable conditions the estimate depends on, or note none exist |
 | Appending to the quotes ledger | Edit `docs/QUOTES.md` in place — never rename it |
 
 ## Common Mistakes
@@ -55,3 +82,5 @@ Every estimate document's metadata table must report an **AI Estimate** in place
 - Leaving a stale date in the filename after the assessment is revised.
 - Including both an `Estimate` row and an `AI Estimate` row, or adding a `Human Estimate` row.
 - Renaming `QUOTES.md` to a dated form.
+- Omitting the Assumptions section, or burying assumptions inside the breakdown instead of stating them up front.
+- Writing assumptions as vague hedges instead of falsifiable statements.
