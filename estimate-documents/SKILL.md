@@ -1,7 +1,7 @@
 ---
 name: estimate-documents
-description: "Use when creating, naming, renaming, or filling in the metadata table of estimate documents under docs/estimates/ — covers date-prefixed filenames keyed to the Date of assessment field, the required AI Estimate metadata row, the required Scope/Assumptions/Breakdown structure, and the fully-variablized pricing formula (buffer multiplier, man-day hours, base man-day rate, currency — never assume $) for client-facing quotations. Always trigger when the user asks to write, draft, or create an estimate."
-version: 1.5.0
+description: "Use when creating, naming, renaming, or filling in the metadata table of estimate documents under docs/estimates/, writing a client-facing quotation, or creating/updating an estimate in Zoho Books — covers date-prefixed filenames keyed to the Date of assessment field, the required AI Estimate metadata row, the required Scope/Assumptions/Breakdown structure, the fully-variablized pricing formula (buffer multiplier, man-day hours, base man-day rate, currency — never assume $), writing the actual quotation text in plain business bullet points (distinct from docs/QUOTES.md, the internal pricing-variable ledger), the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using `service`-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to write, draft, or create an estimate or quote."
+version: 1.9.0
 ---
 
 # Estimate Documents Skill
@@ -14,6 +14,8 @@ Load this skill when you are:
 - Renaming an estimate document after its `Date of assessment` changes
 - Writing or reviewing an estimate document's metadata table
 - Computing a client-facing price/quotation from an `AI Estimate`
+- Writing the actual client-facing quotation text (not `docs/QUOTES.md`, the internal pricing-variable ledger)
+- Creating or updating an estimate in Zoho Books
 - Adding an entry to `docs/QUOTES.md`
 
 **This skill must always trigger whenever the user asks the agent to write, draft, or create an estimate** — even if the request doesn't mention filenames, metadata, or `docs/estimates/` directly.
@@ -107,6 +109,20 @@ Currency: USD
 Price: (30 / 6) × 800 USD = 4,000 USD
 ```
 
+This derivation is the internal audit trail for the estimate document — it is not what gets sent to the client. When writing the actual client-facing quotation text, read `references/writing-quotations.md` first.
+
+---
+
+## Writing Client Quotations
+
+The quotation is the pricing text a client actually reads — not to be confused with `docs/QUOTES.md`, the internal ledger of pricing variables. Read `references/writing-quotations.md` before writing or editing any client-facing quotation: lead with bullet points and plain business language, not the internal derivation or technical terms.
+
+---
+
+## Zoho Books Estimates
+
+Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `update_estimate`) has its own scoped-editing and line-item rules — read `references/zoho-books.md` first. This covers touching only the sections the user asked to change, always using `service`-type line items, and not exposing man-hour breakdowns unless explicitly requested.
+
 ---
 
 ## Quick Reference
@@ -119,6 +135,9 @@ Price: (30 / 6) × 800 USD = 4,000 USD
 | Writing the document body | Follow Metadata → Scope → Assumptions → Breakdown → Pricing (if quoted), in that order |
 | Stating assumptions | List falsifiable conditions the estimate depends on, or note none exist |
 | Computing a client price | `Quoted time = buffer multiplier × AI Estimate`; `Price = (Quoted time / man-day hours) × base man-day rate`, in `currency`; get all four variables from `docs/QUOTES.md`, or ask the user |
+| Writing the client-facing quotation text | See `references/writing-quotations.md` — bullet points, plain business language, outputs only (no internal derivation or jargon) |
+| Updating a Zoho Books estimate | See `references/zoho-books.md` — `get_estimate` first, then `update_estimate` with only the fields the user asked to change |
+| Creating/adding a Zoho Books line item | See `references/zoho-books.md` — use `service` item type; describe the deliverable, not man-hours, unless explicitly requested |
 | Appending to the quotes ledger | Edit `docs/QUOTES.md` in place — never rename it |
 
 ## Common Mistakes
@@ -131,3 +150,7 @@ Price: (30 / 6) × 800 USD = 4,000 USD
 - Writing assumptions as vague hedges instead of falsifiable statements.
 - Writing a hardcoded price without showing the `AI Estimate` → `Quoted time` → `base man-day rate` derivation.
 - Assuming, inventing, or silently defaulting `buffer multiplier`, `man-day hours`, `base man-day rate`, or `currency` instead of reading them from `docs/QUOTES.md` or asking the user — including quietly using the "typical" values without confirming them, or assuming `$`/USD by default.
+- Sending a client the internal derivation or jargon (`AI Estimate`, `buffer multiplier`, etc.) instead of a plain-language, bulleted quotation — see `references/writing-quotations.md`.
+- Confusing the client-facing quotation with `docs/QUOTES.md`, which only tracks internal pricing variables and is never client-facing.
+- Overwriting or reformatting unrelated sections of a Zoho Books estimate when the user only asked to change one part of it — see `references/zoho-books.md`.
+- Using a `goods`/inventory item type for a Zoho Books line item instead of `service`, or exposing man-hour breakdowns by default when the user never asked for them.
