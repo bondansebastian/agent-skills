@@ -1,7 +1,7 @@
 ---
 name: user-guide-documents
-description: "Use when writing, drafting, or updating a user guide, user manual, help center article, how-to article, or any end-user-facing documentation for an application or feature — covers writing in plain, non-technical business language for a non-technical end-user audience, and never referencing ticket numbers, JIRA IDs, feature flags, internal service/class/table names, or other internal identifiers in the guide."
-version: 1.2.0
+description: "Use whenever the user asks to write, create, draft, or update a guide, documentation, user manual, help center article, how-to article, or any end-user-facing documentation for an application or feature — covers writing in plain, non-technical business language for a non-technical end-user audience, and never referencing ticket numbers, JIRA IDs, feature flags, internal service/class/table names, or other internal identifiers in the guide."
+version: 1.3.0
 ---
 
 # User Guide Documents Skill
@@ -15,7 +15,7 @@ Load this skill whenever you are writing or editing content meant for the people
 - In-app help text, tooltips, or onboarding copy
 - Customer-facing release notes describing a new feature
 
-**This skill must always trigger whenever the user asks for a "user guide," "manual," "help doc," or similar end-user documentation** — even if the request doesn't spell out these rules.
+**This skill must always trigger whenever the user asks to write, create, draft, or update a "guide," "documentation," "manual," "help doc," or similar end-user-facing document** — even if the request is a short, generic ask like "write a guide for this feature" or "create documentation for X" that doesn't spell out these rules.
 
 ---
 
