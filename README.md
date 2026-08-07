@@ -29,6 +29,7 @@ Each skill lives in its own folder and contains a `SKILL.md` file with:
 | ⚛️ React Best Practices | Opinionated React component architecture: SRP-driven splits, colocation, state isolation, explicit props, re-exported types, naming conventions, and practical file-size targets. | [react-best-practices/SKILL.md](react-best-practices/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill react-best-practices` |
 | 🧠 Agent Instructor | Refine or create AI/LLM agent instruction files (AGENTS.md, CLAUDE.md, copilot-instructions.md, .github/instructions) with zero information loss, machine-parsable structure, and token efficiency. | [agent-instructor/SKILL.md](agent-instructor/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill agent-instructor` |
 | 📄 Estimate Documents | Create, name, and rename client estimate documents under docs/estimates/, dated by their Date of assessment metadata field, with a required AI Estimate row, a structured Scope/Assumptions/Breakdown format, a fully-variablized pricing formula (buffer multiplier, man-day hours, base man-day rate, currency), plain-business-language client quotation writing, and scoped, non-destructive Zoho Books estimate handling (service-type line items, no unrequested man-hour detail). Triggers whenever the user asks to write an estimate or quote. | [estimate-documents/SKILL.md](estimate-documents/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill estimate-documents` |
+| 📖 User Guide Documents | Write end-user guides, manuals, and help center articles in plain non-technical business language for the app's actual end-user, never referencing ticket numbers, JIRA IDs, feature flags, or other internal identifiers; when publishing to Notion, checks the skill's MEMORY.md for a known target page and always asks the user explicitly before writing if none is found. | [user-guide-documents/SKILL.md](user-guide-documents/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill user-guide-documents` |
 
 ## Repository Layout
 
@@ -70,11 +71,15 @@ agent-skills/
 │   └── SKILL.md
 ├── agent-instructor/
 │   └── SKILL.md
-└── estimate-documents/
+├── estimate-documents/
+│   ├── SKILL.md
+│   └── references/
+│       ├── writing-quotations.md
+│       └── zoho-books.md
+└── user-guide-documents/
     ├── SKILL.md
     └── references/
-        ├── writing-quotations.md
-        └── zoho-books.md
+        └── writing-to-notion.md
 ```
 
 ## Why Agent Skills

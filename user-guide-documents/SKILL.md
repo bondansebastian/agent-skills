@@ -1,0 +1,73 @@
+---
+name: user-guide-documents
+description: "Use when writing, drafting, or updating a user guide, user manual, help center article, how-to article, or any end-user-facing documentation for an application or feature — covers writing in plain, non-technical business language for a non-technical end-user audience, and never referencing ticket numbers, JIRA IDs, feature flags, internal service/class/table names, or other internal identifiers in the guide."
+version: 1.1.0
+---
+
+# User Guide Documents Skill
+
+## When to Use This Skill
+
+Load this skill whenever you are writing or editing content meant for the people who **use** an application — not the people who build or support it internally:
+
+- User guides, user manuals, help center articles
+- How-to / step-by-step instructions for end users
+- In-app help text, tooltips, or onboarding copy
+- Customer-facing release notes describing a new feature
+
+**This skill must always trigger whenever the user asks for a "user guide," "manual," "help doc," or similar end-user documentation** — even if the request doesn't spell out these rules.
+
+---
+
+## The Reader
+
+Write for the actual end-user of the application: someone who uses the product to get their work done and has **no knowledge of how it's built**. They don't know what a database, API, queue, cache, feature flag, or backend service is, and they don't need to. Before writing a line, picture that reader and ask "would this sentence mean anything to them?" — if not, cut or rephrase it.
+
+Explain what the reader can **do** and **see** (buttons, screens, fields, outcomes), not how the system works underneath.
+
+---
+
+## Core Rules
+
+1. **Plain, non-technical business language.** Describe features in terms of what the user does and what happens as a result — everyday words, not engineering vocabulary. If a technical term is unavoidable (e.g., the product itself is a developer tool and "API key" is a UI label the user sees), use only the term the user actually sees on screen — never the internal name for it.
+
+2. **Never reference ticket numbers or internal identifiers.** This includes JIRA/ticket IDs (`PROJ-4821`), feature flag names (`bulk_export_v2`), internal class/controller/service names (`AuthController`, `NotifyService`), database or table names (`otp_codes`), infrastructure details (SQS, Lambda, Redis, S3), commit hashes, and internal codenames. None of these belong in a document the end user reads, regardless of who asks or why (e.g. "so support can cross-reference it") — that need belongs in an internal runbook, not the user guide.
+
+3. **Stay in the reader's shoes throughout.** Every section — steps, troubleshooting, "good to know" notes — should read as if written for someone who has never seen the app's internals and never will.
+
+---
+
+## Handling Internal Context You're Given
+
+You'll often be handed a ticket, engineering notes, or a Slack message full of implementation detail to write the guide *from*. Use it to understand what changed and how to explain the outcome — but treat all of it as raw material, not content to copy in:
+
+- Extract: what the user can now do, what steps they take, what they'll see, what to do if something goes wrong.
+- Discard: ticket IDs, flag names, class/service/table names, infra choices, internal-only caveats.
+- If support or another internal team genuinely needs the technical cross-reference, offer to write that separately (e.g., an internal runbook note) — keep it out of the user-facing document itself.
+
+---
+
+## Writing to Notion
+
+If the guide is being published or updated in Notion, never assume which page to write to. See `references/writing-to-notion.md` for the full rule: check this skill's `MEMORY.md` for a known target page first, ask the user explicitly when none is found, and offer to save their answer to `MEMORY.md` for next time.
+
+---
+
+## Quick Reference
+
+| Situation | Action |
+|---|---|
+| Writing steps for a feature | Describe screens, buttons, and outcomes the user sees — not the backend flow |
+| Given a ticket number and told to include it "for support" | Leave it out of the guide; offer a separate internal note instead |
+| Tempted to explain *why* something works a certain way | Only explain if it changes what the user should do; otherwise omit |
+| Feature flag gates who sees a feature | Say "this feature is being rolled out gradually" — never name the flag |
+| An error code or internal identifier appears in engineering notes | Translate to what the user sees/experiences, or omit entirely |
+| Technical term is unavoidable because it's the product's own domain | Use only the on-screen label, never the internal/code name for it |
+
+## Common Mistakes
+
+- Including a JIRA/ticket number "for traceability" or "so support can look it up."
+- Naming a feature flag, internal service, class, table, or infrastructure component (Redis, SQS, Lambda, S3, etc.).
+- Explaining the backend mechanism (queues, workers, rate limiters) instead of the user-visible behavior and timing.
+- Writing precise internal thresholds/config values instead of the user-relevant outcome (e.g. state "you'll need to wait a little while" rather than exposing internal tuning numbers, unless the number itself is what the user needs to know, like a 24-hour link expiry).
+- Slipping into engineering vocabulary because the source material (tickets, Slack messages) was full of it.

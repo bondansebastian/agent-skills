@@ -1,0 +1,38 @@
+# Writing to Notion
+
+Reference for publishing or updating a user guide in Notion instead of (or in addition to) a local file.
+
+## Core Rule: Never Assume the Target Page
+
+Before creating or updating any Notion page for a user guide:
+
+1. **Check `MEMORY.md`** in this skill's folder (`user-guide-documents/MEMORY.md`) for a matching entry — one that names the guide, feature, or product area you're about to write about.
+2. **If a matching entry exists**, use the page/URL it records as the write target. Confirm with the user only if the request is ambiguous about which guide this is.
+3. **If no matching entry exists**, do not guess a page, workspace, or parent based on naming similarity, recent activity, or search results. Stop and ask the user explicitly which Notion page (or parent page, for a new page) to write to.
+
+## After the User Answers
+
+Once the user tells you which Notion page to use, ask whether they'd like it remembered for next time:
+
+> "Want me to remember this Notion page in MEMORY.md for future [guide/feature name] updates?"
+
+- If yes, append an entry to `user-guide-documents/MEMORY.md` (create the file if it doesn't exist) recording what the page is for and its page/URL.
+- If no, proceed with the write without saving anything.
+
+## MEMORY.md Entry Format
+
+Keep entries short and matchable by guide/feature name:
+
+```markdown
+- **<Guide or feature name>** — <Notion page title> — <page URL or ID>
+```
+
+## Quick Reference
+
+| Situation | Action |
+|---|---|
+| `MEMORY.md` has a matching entry | Use it as the target; no need to ask |
+| `MEMORY.md` doesn't exist yet | Treat as no entries — ask before writing |
+| No matching entry for this guide | Ask the user explicitly which page to use — never assume |
+| User names a page for a new/unmatched guide | After writing, ask if they want it saved to `MEMORY.md` |
+| User declines to save | Write to the page as instructed, skip `MEMORY.md` |
