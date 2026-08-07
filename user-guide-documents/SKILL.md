@@ -1,7 +1,7 @@
 ---
 name: user-guide-documents
 description: "Use whenever the user asks to write, create, draft, or update a guide, documentation, user manual, help center article, how-to article, or any end-user-facing documentation for an application or feature — covers writing in plain, non-technical business language for a non-technical end-user audience, and never referencing ticket numbers, JIRA IDs, feature flags, internal service/class/table names, or other internal identifiers in the guide."
-version: 1.4.0
+version: 1.5.0
 ---
 
 # User Guide Documents Skill
@@ -24,6 +24,12 @@ Load this skill whenever you are writing or editing content meant for the people
 Write for the actual end-user of the application: someone who uses the product to get their work done and has **no knowledge of how it's built**. They don't know what a database, API, queue, cache, feature flag, or backend service is, and they don't need to. Before writing a line, picture that reader and ask "would this sentence mean anything to them?" — if not, cut or rephrase it.
 
 Explain what the reader can **do** and **see** (buttons, screens, fields, outcomes), not how the system works underneath.
+
+---
+
+## Language
+
+Before drafting any content, determine what language the guide should be written in. See `references/language-preference.md` for the full rule: if the user hasn't already stated a language, check this skill's `MEMORY.md` for a remembered default first; if none is saved, ask the user, then save their answer to `MEMORY.md` so future guides use it automatically without asking again.
 
 ---
 
@@ -76,6 +82,7 @@ If the guide is being published or updated in Notion, never assume which page to
 
 | Situation | Action |
 |---|---|
+| Starting any guide-writing task | Check `MEMORY.md` for a remembered language preference before drafting; if none, ask the user and save their answer |
 | Writing steps for a feature | Describe screens, buttons, and outcomes the user sees — not the backend flow, as a numbered step-by-step sequence with a screenshot per step where possible |
 | No access to the app/assets to capture a real screenshot | Write the step in text and note a screenshot should be added — never fabricate one |
 | Login page blocks screenshot capture | Check `MEMORY.md` for saved credentials; if none, ask the user for login credentials — never guess or skip silently |
