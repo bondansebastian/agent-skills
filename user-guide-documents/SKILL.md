@@ -1,7 +1,7 @@
 ---
 name: user-guide-documents
 description: "Use whenever the user asks to write, create, draft, or update a guide, documentation, user manual, help center article, how-to article, or any end-user-facing documentation for an application or feature — covers writing in plain, non-technical business language for a non-technical end-user audience, and never referencing ticket numbers, JIRA IDs, feature flags, internal service/class/table names, or other internal identifiers in the guide."
-version: 1.3.0
+version: 1.4.0
 ---
 
 # User Guide Documents Skill
@@ -60,6 +60,10 @@ For each step, include a screenshot of the actual screen/state the user sees at 
 
 Steps that are purely informational (a note, a warning, "good to know") don't need a screenshot — reserve them for actions the user takes or state changes they need to visually confirm.
 
+### If You Hit a Login Page While Capturing Screenshots
+
+If reaching the screen you need to screenshot requires signing in first, don't guess credentials or skip the screenshot silently. See `references/handling-authentication.md` for the full rule: check this skill's `MEMORY.md` for saved credentials first, otherwise ask the user for the login credentials, and offer to save their answer to `MEMORY.md` for next time.
+
 ---
 
 ## Writing to Notion
@@ -74,6 +78,7 @@ If the guide is being published or updated in Notion, never assume which page to
 |---|---|
 | Writing steps for a feature | Describe screens, buttons, and outcomes the user sees — not the backend flow, as a numbered step-by-step sequence with a screenshot per step where possible |
 | No access to the app/assets to capture a real screenshot | Write the step in text and note a screenshot should be added — never fabricate one |
+| Login page blocks screenshot capture | Check `MEMORY.md` for saved credentials; if none, ask the user for login credentials — never guess or skip silently |
 | Given a ticket number and told to include it "for support" | Leave it out of the guide; offer a separate internal note instead |
 | Tempted to explain *why* something works a certain way | Only explain if it changes what the user should do; otherwise omit |
 | Feature flag gates who sees a feature | Say "this feature is being rolled out gradually" — never name the flag |
