@@ -1,7 +1,7 @@
 ---
 name: user-guide-documents
 description: "Use whenever the user asks to write, create, draft, or update a guide, documentation, user manual, help center article, how-to article, or any end-user-facing documentation for an application or feature — covers writing in plain, non-technical business language for a non-technical end-user audience, and never referencing ticket numbers, JIRA IDs, feature flags, internal service/class/table names, or other internal identifiers in the guide."
-version: 1.5.0
+version: 1.6.0
 ---
 
 # User Guide Documents Skill
@@ -74,7 +74,7 @@ If reaching the screen you need to screenshot requires signing in first, don't g
 
 ## Writing to Notion
 
-If the guide is being published or updated in Notion, never assume which page to write to. See `references/writing-to-notion.md` for the full rule: check this skill's `MEMORY.md` for a known target page first, ask the user explicitly when none is found, and offer to save their answer to `MEMORY.md` for next time.
+If the guide is being published or updated in Notion, never assume which page to write to. See `references/writing-to-notion.md` for the full rule: check this skill's `MEMORY.md` for a known target page first, ask the user explicitly when none is found, and offer to save their answer to `MEMORY.md` for next time. Once the target is known, organize content using the default structure — project page → "User Manual" page → one sub-page per module — unless `MEMORY.md` records a different structure for this project, or the user requests one (in which case, offer to save it to `MEMORY.md`).
 
 ---
 

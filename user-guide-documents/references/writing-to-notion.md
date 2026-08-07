@@ -19,20 +19,48 @@ Once the user tells you which Notion page to use, ask whether they'd like it rem
 - If yes, append an entry to `user-guide-documents/MEMORY.md` (create the file if it doesn't exist) recording what the page is for and its page/URL.
 - If no, proceed with the write without saving anything.
 
+## Default Page Structure
+
+Once the target project's Notion location is known (via the Core Rule above), organize the guide content using this default structure:
+
+1. **Project page** — the page representing the project itself.
+2. **"User Manual" page** — a page directly under the project page (create it if it doesn't already exist).
+3. **Module pages** — for each module being documented, create a sub-page under "User Manual".
+
+Apply this default only if `MEMORY.md` doesn't record a different structure for this project — a `MEMORY.md` structure entry always overrides the default.
+
+## When the User Requests a Different Structure
+
+If the user asks for a structure that differs from the default (e.g., flat pages, a different hierarchy, module docs as sections instead of sub-pages), follow their requested structure for this write. Then ask:
+
+> "Want me to remember this structure in MEMORY.md so future guides for [project name] use it automatically instead of the default?"
+
+- If yes, append a structure entry to `user-guide-documents/MEMORY.md`.
+- If no, use the requested structure for this write only — don't save anything.
+
 ## MEMORY.md Entry Format
 
-Keep entries short and matchable by guide/feature name:
+Keep entries short and matchable by guide/feature name. Use two entry kinds:
 
+**Target page** (which Notion page/parent to write to):
 ```markdown
 - **<Guide or feature name>** — <Notion page title> — <page URL or ID>
+```
+
+**Structure override** (a non-default page hierarchy for a project):
+```markdown
+- **<Project name> structure** — <description of the hierarchy, e.g. "flat: one page per module directly under the project page, no 'User Manual' page">
 ```
 
 ## Quick Reference
 
 | Situation | Action |
 |---|---|
-| `MEMORY.md` has a matching entry | Use it as the target; no need to ask |
+| `MEMORY.md` has a matching target-page entry | Use it as the target; no need to ask |
 | `MEMORY.md` doesn't exist yet | Treat as no entries — ask before writing |
 | No matching entry for this guide | Ask the user explicitly which page to use — never assume |
 | User names a page for a new/unmatched guide | After writing, ask if they want it saved to `MEMORY.md` |
 | User declines to save | Write to the page as instructed, skip `MEMORY.md` |
+| No structure override in `MEMORY.md` | Use the default structure: project page → "User Manual" page → one sub-page per module |
+| `MEMORY.md` has a structure override for this project | Use the recorded structure instead of the default — it always wins |
+| User requests a structure different from the default | Follow their request for this write, then offer to save it to `MEMORY.md` |
