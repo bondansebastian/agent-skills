@@ -1,7 +1,7 @@
 ---
 name: user-guide-documents
 description: "Use when writing, drafting, or updating a user guide, user manual, help center article, how-to article, or any end-user-facing documentation for an application or feature — covers writing in plain, non-technical business language for a non-technical end-user audience, and never referencing ticket numbers, JIRA IDs, feature flags, internal service/class/table names, or other internal identifiers in the guide."
-version: 1.1.0
+version: 1.2.0
 ---
 
 # User Guide Documents Skill
@@ -47,6 +47,21 @@ You'll often be handed a ticket, engineering notes, or a Slack message full of i
 
 ---
 
+## Structure: Step by Step, With Screenshots Where Possible
+
+Write any set of instructions as a numbered, step-by-step sequence — one user action per step, in the order the user actually performs them (click X → see Y → enter Z), not a prose paragraph describing the flow.
+
+For each step, include a screenshot of the actual screen/state the user sees at that point whenever you're able to capture or generate one (e.g. you have access to the running app, a browser, or existing product screenshots to pull from):
+
+- Place the screenshot immediately after the step it illustrates, not batched at the end.
+- Capture only what's relevant to that step — crop or point to the specific button/field rather than a whole cluttered screen when possible.
+- If you cannot produce a real screenshot (no access to the app, no design assets, etc.), do not fabricate or describe a fake one — write the step clearly in text and note that a screenshot should be added, rather than inventing image content.
+- Screenshots must follow the same rules as the rest of the guide: no internal tool chrome, debug panels, ticket numbers, or internal identifiers visible in the captured image — crop or redact them out.
+
+Steps that are purely informational (a note, a warning, "good to know") don't need a screenshot — reserve them for actions the user takes or state changes they need to visually confirm.
+
+---
+
 ## Writing to Notion
 
 If the guide is being published or updated in Notion, never assume which page to write to. See `references/writing-to-notion.md` for the full rule: check this skill's `MEMORY.md` for a known target page first, ask the user explicitly when none is found, and offer to save their answer to `MEMORY.md` for next time.
@@ -57,7 +72,8 @@ If the guide is being published or updated in Notion, never assume which page to
 
 | Situation | Action |
 |---|---|
-| Writing steps for a feature | Describe screens, buttons, and outcomes the user sees — not the backend flow |
+| Writing steps for a feature | Describe screens, buttons, and outcomes the user sees — not the backend flow, as a numbered step-by-step sequence with a screenshot per step where possible |
+| No access to the app/assets to capture a real screenshot | Write the step in text and note a screenshot should be added — never fabricate one |
 | Given a ticket number and told to include it "for support" | Leave it out of the guide; offer a separate internal note instead |
 | Tempted to explain *why* something works a certain way | Only explain if it changes what the user should do; otherwise omit |
 | Feature flag gates who sees a feature | Say "this feature is being rolled out gradually" — never name the flag |
@@ -71,3 +87,6 @@ If the guide is being published or updated in Notion, never assume which page to
 - Explaining the backend mechanism (queues, workers, rate limiters) instead of the user-visible behavior and timing.
 - Writing precise internal thresholds/config values instead of the user-relevant outcome (e.g. state "you'll need to wait a little while" rather than exposing internal tuning numbers, unless the number itself is what the user needs to know, like a 24-hour link expiry).
 - Slipping into engineering vocabulary because the source material (tickets, Slack messages) was full of it.
+- Writing steps as a dense paragraph instead of a numbered, one-action-per-step sequence.
+- Describing or inventing a screenshot instead of either capturing a real one or flagging that one needs to be added.
+- Including internal tool chrome, debug panels, or identifiers visible inside a captured screenshot.
