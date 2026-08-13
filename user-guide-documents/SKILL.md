@@ -1,7 +1,7 @@
 ---
 name: user-guide-documents
 description: "Use whenever the user asks to write, create, draft, or update a guide, documentation, user manual, help center article, how-to article, or any end-user-facing documentation for an application or feature — covers writing in plain, non-technical business language for a non-technical end-user audience, and never referencing ticket numbers, JIRA IDs, feature flags, internal service/class/table names, or other internal identifiers in the guide."
-version: 1.8.0
+version: 1.9.0
 ---
 
 # User Guide Documents Skill
@@ -27,9 +27,20 @@ Explain what the reader can **do** and **see** (buttons, screens, fields, outcom
 
 ---
 
+## Memory Location: Local vs. Global Install
+
+This skill checks and saves to `MEMORY.md` in several places below (language preference, login credentials, Notion targets). Before the *first* such check in any task, determine where that file actually is:
+
+- **If this skill is installed locally** (its folder lives inside the current project), `MEMORY.md` is simply `user-guide-documents/MEMORY.md` — no extra steps.
+- **If this skill is installed globally** (its folder is shared across projects, e.g. under a home-directory config location), a single flat `MEMORY.md` would mix unrelated projects' data together. See `references/global-installation.md` for the full rule: memory must instead live at `<global-skill-folder>/memory/<current-project-directory-name>/MEMORY.md`, created if it doesn't exist yet.
+
+Every `MEMORY.md` reference in this document and in `references/language-preference.md`, `references/handling-authentication.md`, and `references/writing-to-notion.md` means this resolved path — re-derive it whenever the active project changes.
+
+---
+
 ## Language
 
-Before drafting any content, determine what language the guide should be written in. See `references/language-preference.md` for the full rule: if the user hasn't already stated a language, check this skill's `MEMORY.md` for a remembered default first; if none is saved, ask the user, then save their answer to `MEMORY.md` so future guides use it automatically without asking again.
+Before drafting any content, determine what language the guide should be written in. See `references/language-preference.md` for the full rule: if the user hasn't already stated a language, check this skill's `MEMORY.md` (resolved per the Memory Location section above) for a remembered default first; if none is saved, ask the user, then save their answer to `MEMORY.md` so future guides use it automatically without asking again.
 
 ---
 
@@ -76,13 +87,13 @@ Before using `playwright-cli` to capture screenshots, check whether it's actuall
 
 ### If You Hit a Login Page While Capturing Screenshots
 
-If reaching the screen you need to screenshot requires signing in first, don't guess credentials or skip the screenshot silently. See `references/handling-authentication.md` for the full rule: check this skill's `MEMORY.md` for saved credentials first, otherwise ask the user for the login credentials, and offer to save their answer to `MEMORY.md` for next time.
+If reaching the screen you need to screenshot requires signing in first, don't guess credentials or skip the screenshot silently. See `references/handling-authentication.md` for the full rule: check this skill's `MEMORY.md` (resolved per the Memory Location section above) for saved credentials first, otherwise ask the user for the login credentials, and offer to save their answer to `MEMORY.md` for next time.
 
 ---
 
 ## Writing to Notion
 
-If the guide is being published or updated in Notion, never assume which page to write to. See `references/writing-to-notion.md` for the full rule: check this skill's `MEMORY.md` for a known target page first, ask the user explicitly when none is found, and offer to save their answer to `MEMORY.md` for next time. Once the target is known, organize content using the default structure — project page → "User Manual" page → one sub-page per module — unless `MEMORY.md` records a different structure for this project, or the user requests one (in which case, offer to save it to `MEMORY.md`).
+If the guide is being published or updated in Notion, never assume which page to write to. See `references/writing-to-notion.md` for the full rule: check this skill's `MEMORY.md` (resolved per the Memory Location section above) for a known target page first, ask the user explicitly when none is found, and offer to save their answer to `MEMORY.md` for next time. Once the target is known, organize content using the default structure — project page → "User Manual" page → one sub-page per module — unless `MEMORY.md` records a different structure for this project, or the user requests one (in which case, offer to save it to `MEMORY.md`).
 
 ---
 
@@ -90,7 +101,8 @@ If the guide is being published or updated in Notion, never assume which page to
 
 | Situation | Action |
 |---|---|
-| Starting any guide-writing task | Check `MEMORY.md` for a remembered language preference before drafting; if none, ask the user and save their answer |
+| Starting any guide-writing task | Resolve the correct `MEMORY.md` path (local vs. global install, see Memory Location section), then check it for a remembered language preference before drafting; if none, ask the user and save their answer |
+| Skill is installed globally (shared across projects) | Use `<global-skill-folder>/memory/<current-project-directory-name>/MEMORY.md` instead of a flat `MEMORY.md` — create it if missing |
 | Writing steps for a feature | Describe screens, buttons, and outcomes the user sees — not the backend flow, as a numbered step-by-step sequence with a screenshot per step where possible |
 | No access to the app/assets to capture a real screenshot | Write the step in text and note a screenshot should be added — never fabricate one |
 | `playwright-cli` or its dependencies not detected | Offer to install per https://github.com/microsoft/playwright-cli |
