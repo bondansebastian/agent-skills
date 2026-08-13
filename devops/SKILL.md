@@ -1,7 +1,7 @@
 ---
 name: devops
 description: Use when the user wants to interact with, manage, deploy to, or query a supported DevOps/hosting platform — currently Coolify (self-hosted PaaS for apps, databases, and services). Triggers on platform names (Coolify, and later Vercel, Cloudflare), or requests to deploy, check server/app status, view logs, manage environment variables, databases, or services on those platforms.
-version: 1.1.0
+version: 1.2.0
 license: MIT
 ---
 
@@ -36,6 +36,14 @@ This rule binds every platform directory — do not weaken it in a platform's ow
   3. Its likely impact — what changes, what's affected (downtime, data loss, other users/services notified), and whether it's reversible.
 - Confirm each write operation individually. Do not bundle several writes under one confirmation unless the user has explicitly pre-approved that exact batch.
 - If unsure whether a command is a read or a write, treat it as a write and confirm.
+
+## Installation Cleanup Policy (applies to every platform)
+
+Whenever this skill installs or updates a platform's CLI (or any dependency needed to run it), remove any leftover installation artifacts once the install succeeds — downloaded installer scripts, archives/tarballs, extracted directories, checksum files, and other staging files left in the working directory, `/tmp`, or a scratch directory.
+
+- Clean up immediately after confirming the install worked (e.g. a version check succeeds), not before.
+- Only remove the staging artifacts, never the installed binary, its config file, or its data directories.
+- If cleanup itself would delete something ambiguous, ask before removing it rather than guessing.
 
 ## Adding a New Platform
 

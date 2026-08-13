@@ -1,7 +1,7 @@
 ---
 name: devops-coolify
 description: Use when the user wants to manage Coolify (self-hosted PaaS) — deploying or restarting apps, checking server/project/resource status, viewing app or database logs, managing environment variables, contexts, tags, destinations, cloud-provider tokens, databases, or one-click services via the `coolify` CLI. Triggers on "coolify", "self-hosted PaaS", or coolify app/server/database/service/deploy/context commands.
-version: 1.1.0
+version: 1.2.0
 license: MIT
 ---
 
@@ -31,6 +31,7 @@ coolify context version
   # Go install
   go install github.com/coollabsio/coolify-cli/coolify@latest
   ```
+- After the install succeeds (verify with `coolify context version`), follow the devops skill's **Installation Cleanup Policy** (see top-level `../SKILL.md`): remove any leftover installer artifacts — a saved copy of `install.sh`/`install.ps1`, downloaded release archives, or extracted directories used to install manually. Do not remove the installed binary, `~/.config/coolify/config.json`, or the Go module cache used by `go install`.
 - If no context is configured, walk the user through **Authentication** below before running any resource command.
 
 ## Authentication
