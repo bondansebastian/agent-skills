@@ -1,7 +1,7 @@
 ---
 name: devops-coolify
 description: Use when the user wants to manage Coolify (self-hosted PaaS) — deploying or restarting apps, checking server/project/resource status, viewing app or database logs, managing environment variables, contexts, tags, destinations, cloud-provider tokens, databases, or one-click services via the `coolify` CLI. Triggers on "coolify", "self-hosted PaaS", or coolify app/server/database/service/deploy/context commands.
-version: 1.2.0
+version: 1.3.0
 license: MIT
 ---
 
@@ -74,7 +74,7 @@ Full quick-start reference: `references/llms.txt`.
 
 ## Safety
 
-This platform follows the devops skill's **Write Confirmation Policy** (see top-level `../SKILL.md`): read operations run directly, every write operation requires explicit user confirmation first, stated with the exact command, what it does, and its impact.
+This platform follows the devops skill's **Write Confirmation Policy** and **Credential Handling Policy** (see top-level `../SKILL.md`): read operations run directly, every write operation requires explicit user confirmation first, stated with the exact command, what it does, and its impact — and tokens/secrets are never requested from the user or read from `~/.config/coolify/config.json`; point the user to **Authentication** above and the CLI commands there instead. Never run a command with `--show-sensitive`.
 
 **Read (no confirmation):** `context list/verify/version`, `server/project/resource/app/service/database list`, `app get`, `app logs`, `app deployments list/logs`, `app env list`, `deploy list`, `database get/logs/backup list`, `service get/logs/application list/database list`, `tag list`, `destination list`, `cloud-token validate`.
 

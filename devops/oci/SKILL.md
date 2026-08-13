@@ -1,7 +1,7 @@
 ---
 name: devops-oci
 description: Use when the user wants to manage Oracle Cloud Infrastructure (OCI) — querying compartments/compute instances/networking via the `oci` CLI, or connecting to a private OCI compute instance (no public IP) over SSH/SCP through an OCI Bastion tunnel. Triggers on "OCI", "Oracle Cloud", "oci cli", "oci bastion", or requests to ssh/upload/download to/from a private OCI instance.
-version: 1.1.0
+version: 1.2.0
 license: UPL-1.0 OR Apache-2.0
 ---
 
@@ -65,8 +65,9 @@ keypair and `[PROFILE_NAME]` block. Full walkthrough, config file format, and a 
   Look them up with a `list` call first if not already known.
 - Select non-default tenancies with `--profile <name>` per command, or `export OCI_CLI_PROFILE="<name>"` for a
   whole session/script — never hardcode a tenancy's profile name as if it were universal.
-- Never print the contents of a `.pem` private key, `~/.oci/config`, or a bastion/instance private key to the
-  terminal.
+- Follows the devops skill's **Credential Handling Policy** (`../SKILL.md`): never ask the user to paste an API
+  token/key into the conversation, and never read or print the contents of a `.pem` private key, `~/.oci/config`,
+  or a bastion/instance private key. Point the user to **Authentication** above and the OCI Console instead.
 
 ## Private-Instance Access (Bastion SSH/SCP)
 
