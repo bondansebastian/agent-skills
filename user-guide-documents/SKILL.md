@@ -1,7 +1,7 @@
 ---
 name: user-guide-documents
 description: "Use whenever the user asks to write, create, draft, or update a guide, documentation, user manual, help center article, how-to article, or any end-user-facing documentation for an application or feature — covers writing in plain, non-technical business language for a non-technical end-user audience, and never referencing ticket numbers, JIRA IDs, feature flags, internal service/class/table names, or other internal identifiers in the guide."
-version: 1.6.0
+version: 1.8.0
 ---
 
 # User Guide Documents Skill
@@ -57,7 +57,7 @@ You'll often be handed a ticket, engineering notes, or a Slack message full of i
 
 Write any set of instructions as a numbered, step-by-step sequence — one user action per step, in the order the user actually performs them (click X → see Y → enter Z), not a prose paragraph describing the flow.
 
-For each step, include a screenshot of the actual screen/state the user sees at that point whenever you're able to capture or generate one (e.g. you have access to the running app, a browser, or existing product screenshots to pull from):
+For each step, include a screenshot of the actual screen/state the user sees at that point whenever you're able to capture or generate one (e.g. you have access to the running app, a browser, or existing product screenshots to pull from). When you need to interact with a browser to navigate the app and capture these screenshots, prefer the `playwright-cli` tool over other browser automation methods.
 
 - Place the screenshot immediately after the step it illustrates, not batched at the end.
 - Capture only what's relevant to that step — crop or point to the specific button/field rather than a whole cluttered screen when possible.
@@ -65,6 +65,14 @@ For each step, include a screenshot of the actual screen/state the user sees at 
 - Screenshots must follow the same rules as the rest of the guide: no internal tool chrome, debug panels, ticket numbers, or internal identifiers visible in the captured image — crop or redact them out.
 
 Steps that are purely informational (a note, a warning, "good to know") don't need a screenshot — reserve them for actions the user takes or state changes they need to visually confirm.
+
+### If playwright-cli Isn't Available
+
+Before using `playwright-cli` to capture screenshots, check whether it's actually available:
+
+- If `playwright-cli` itself or its dependencies aren't detected, don't silently fall back or skip screenshots — offer to install them following the guide at https://github.com/microsoft/playwright-cli.
+- If no `playwright-cli` skill is detected, offer to install it with `npx skills add https://github.com/microsoft/playwright-cli --skill playwright-cli`.
+- Only proceed without it (falling back to text-only steps per the rule above) if the user declines the install.
 
 ### If You Hit a Login Page While Capturing Screenshots
 
@@ -85,6 +93,8 @@ If the guide is being published or updated in Notion, never assume which page to
 | Starting any guide-writing task | Check `MEMORY.md` for a remembered language preference before drafting; if none, ask the user and save their answer |
 | Writing steps for a feature | Describe screens, buttons, and outcomes the user sees — not the backend flow, as a numbered step-by-step sequence with a screenshot per step where possible |
 | No access to the app/assets to capture a real screenshot | Write the step in text and note a screenshot should be added — never fabricate one |
+| `playwright-cli` or its dependencies not detected | Offer to install per https://github.com/microsoft/playwright-cli |
+| No `playwright-cli` skill detected | Offer to install with `npx skills add https://github.com/microsoft/playwright-cli --skill playwright-cli` |
 | Login page blocks screenshot capture | Check `MEMORY.md` for saved credentials; if none, ask the user for login credentials — never guess or skip silently |
 | Given a ticket number and told to include it "for support" | Leave it out of the guide; offer a separate internal note instead |
 | Tempted to explain *why* something works a certain way | Only explain if it changes what the user should do; otherwise omit |
