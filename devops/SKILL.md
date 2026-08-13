@@ -1,7 +1,7 @@
 ---
 name: devops
 description: Use when the user wants to interact with, manage, deploy to, or query a supported DevOps/hosting platform — currently Coolify (self-hosted PaaS for apps, databases, and services). Triggers on platform names (Coolify, and later Vercel, Cloudflare), or requests to deploy, check server/app status, view logs, manage environment variables, databases, or services on those platforms.
-version: 1.0.0
+version: 1.1.0
 license: MIT
 ---
 
@@ -23,6 +23,19 @@ Router skill for platform-management tasks. Each supported platform is self-cont
 2. If the platform is ambiguous or more than one could apply, ask the user which platform to use.
 3. Load `<platform>/SKILL.md` and follow it exactly for that platform's commands, auth, and safety rules.
 4. If the requested platform isn't supported yet (e.g. Vercel, Cloudflare), tell the user and offer to scaffold a new platform directory following the structure below.
+
+## Write Confirmation Policy (applies to every platform)
+
+This rule binds every platform directory — do not weaken it in a platform's own `SKILL.md`.
+
+- **Read operations** — list, get, view, status, logs, or any call that only retrieves information: run directly, no confirmation needed.
+- **Write operations** — anything that creates, updates, deletes, starts, stops, restarts, deploys, moves, syncs, cancels, or otherwise changes state: **ALWAYS prompt the user for confirmation before running it.** Never execute a write operation on an implicit "go ahead."
+- Each confirmation prompt must state, in plain language:
+  1. The exact command/operation about to run.
+  2. What it does.
+  3. Its likely impact — what changes, what's affected (downtime, data loss, other users/services notified), and whether it's reversible.
+- Confirm each write operation individually. Do not bundle several writes under one confirmation unless the user has explicitly pre-approved that exact batch.
+- If unsure whether a command is a read or a write, treat it as a write and confirm.
 
 ## Adding a New Platform
 

@@ -1,7 +1,7 @@
 ---
 name: devops-coolify
 description: Use when the user wants to manage Coolify (self-hosted PaaS) — deploying or restarting apps, checking server/project/resource status, viewing app or database logs, managing environment variables, contexts, tags, destinations, cloud-provider tokens, databases, or one-click services via the `coolify` CLI. Triggers on "coolify", "self-hosted PaaS", or coolify app/server/database/service/deploy/context commands.
-version: 1.0.0
+version: 1.1.0
 license: MIT
 ---
 
@@ -73,10 +73,23 @@ Full quick-start reference: `references/llms.txt`.
 
 ## Safety
 
-- Always show the command before running it, especially for `stop`, `restart`, `deploy ... --force`, `deploy cancel`, or anything that mutates a database or environment variable.
-- Get explicit user approval before any destructive or production-affecting action (stopping/restarting a running app, cancelling a deployment, deleting/moving a resource).
-- `app env sync` updates existing variables and creates missing ones, but does **not** delete variables absent from the file — safe by default, but confirm the target app/environment before running it.
+This platform follows the devops skill's **Write Confirmation Policy** (see top-level `../SKILL.md`): read operations run directly, every write operation requires explicit user confirmation first, stated with the exact command, what it does, and its impact.
+
+**Read (no confirmation):** `context list/verify/version`, `server/project/resource/app/service/database list`, `app get`, `app logs`, `app deployments list/logs`, `app env list`, `deploy list`, `database get/logs/backup list`, `service get/logs/application list/database list`, `tag list`, `destination list`, `cloud-token validate`.
+
+**Write (always confirm first):** `app start/stop/restart/move/tag add/update/clone/create *`, `app env create/update/sync`, `deploy name/batch/cancel`, `database create/move/backup create`, `service create/application restart/database restart`, `cloud-token create`, `server hetzner create`, `context add/set-token/use`, and any other `create`, `update`, `delete`, `move`, `sync`, `restart`, `stop`, `cancel`, or `deploy` subcommand.
+
+For every write, the confirmation must call out impact specific to the action, e.g.:
+- `app stop`/`restart` — causes downtime for that app until it's back up.
+- `deploy ... --force`/`deploy batch` — triggers a real deployment, may replace the running version.
+- `deploy cancel` — aborts an in-progress deployment.
+- `app env sync` — updates existing variables and creates missing ones; does **not** delete variables absent from the file (state this so the user knows it's non-destructive by default), and confirm the target app/environment before running.
+- `database`/`service` `move`/`create`/`restart` — affects live data or availability of that resource.
+- `cloud-token create`/`server hetzner create` — provisions or authorizes real infrastructure, potentially incurring cost.
+
+Additional rules:
 - Fetch current state (`get`/`list`) before mutating — don't assume a resource's status, environment, or UUID.
+- If a command's read/write status is unclear from the Quick Reference or `references/llms-full.txt`, treat it as a write and confirm.
 
 ## Deep Dive
 
