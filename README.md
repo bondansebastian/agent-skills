@@ -96,7 +96,8 @@ agent-skills/
         ├── scripts/
         │   ├── download-oci
         │   ├── ssh-oci
-        │   └── upload-oci
+        │   ├── upload-oci
+        │   └── rotate-oci-config.py
         └── references/
             ├── cli-install.md
             ├── cli-config.md
