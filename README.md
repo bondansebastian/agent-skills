@@ -30,7 +30,7 @@ Each skill lives in its own folder and contains a `SKILL.md` file with:
 | 🧠 Agent Instructor | Refine or create AI/LLM agent instruction files (AGENTS.md, CLAUDE.md, copilot-instructions.md, .github/instructions) with zero information loss, machine-parsable structure, and token efficiency. | [agent-instructor/SKILL.md](agent-instructor/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill agent-instructor` |
 | 📄 Estimate Documents | Create, name, and rename client estimate documents under docs/estimates/, dated by their Date of assessment metadata field, with a required AI Estimate row, a structured Scope/Assumptions/Breakdown format, a fully-variablized pricing formula (buffer multiplier, man-day hours, base man-day rate, currency), plain-business-language client quotation writing, and scoped, non-destructive Zoho Books estimate handling (service-type line items, no unrequested man-hour detail). Triggers whenever the user asks to write an estimate or quote. | [estimate-documents/SKILL.md](estimate-documents/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill estimate-documents` |
 | 📖 User Guide Documents | Write end-user guides, manuals, and help center articles in plain non-technical business language for the app's actual end-user, as numbered step-by-step instructions with a screenshot per step where possible (preferring the playwright-cli tool for browser interaction and screenshot capture, offering to install playwright-cli or its skill if not detected), never referencing ticket numbers, JIRA IDs, feature flags, or other internal identifiers; always checks the skill's MEMORY.md at the start for a remembered guide language before drafting (asking and saving it if not yet known) — when installed globally, MEMORY.md is instead kept per-project under a `memory/<project-directory-name>/` folder inside the global skill folder, so preferences from different projects never mix; when publishing to Notion, checks MEMORY.md for a known target page and always asks the user explicitly before writing if none is found, then organizes content using the default structure (project page → "User Manual" page → one sub-page per module) unless MEMORY.md or the user specifies otherwise; if a login page blocks screenshot capture, checks MEMORY.md for saved credentials and otherwise asks the user, offering to remember them for next time. | [user-guide-documents/SKILL.md](user-guide-documents/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill user-guide-documents` |
-| ⚙️ DevOps | Manage supported DevOps/hosting platforms by natural language — currently Coolify (self-hosted PaaS: apps, databases, services, deployments, logs, env vars) via a vendored, standalone copy of the `coolify` CLI docs; structured with one self-contained subdirectory per platform so Vercel and Cloudflare can be added later without touching existing platforms. | [devops/SKILL.md](devops/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill devops` |
+| ⚙️ DevOps | Manage supported DevOps/hosting platforms by natural language — Coolify (self-hosted PaaS: apps, databases, services, deployments, logs, env vars) and OCI (Oracle Cloud Infrastructure: `oci` CLI plus an opinionated bastion-tunnel workflow for SSH/SCP to private compute instances with no public IP) — via vendored, standalone copies of each platform's CLI docs; structured with one self-contained subdirectory per platform so Vercel and Cloudflare can be added later without touching existing platforms. | [devops/SKILL.md](devops/SKILL.md) | `npx skills add https://github.com/bondansebastian/agent-skills --skill devops` |
 
 ## Repository Layout
 
@@ -83,13 +83,24 @@ agent-skills/
 │       └── writing-to-notion.md
 └── devops/
     ├── SKILL.md
-    └── coolify/
+    ├── coolify/
+    │   ├── SKILL.md
+    │   ├── LICENSE
+    │   └── references/
+    │       ├── llms.txt
+    │       ├── llms-full.txt
+    │       └── cli-readme.md
+    └── oci/
         ├── SKILL.md
         ├── LICENSE
+        ├── scripts/
+        │   ├── download-oci
+        │   ├── ssh-oci
+        │   └── upload-oci
         └── references/
-            ├── llms.txt
-            ├── llms-full.txt
-            └── cli-readme.md
+            ├── cli-install.md
+            ├── cli-config.md
+            └── bastion-workflow.md
 ```
 
 ## Why Agent Skills

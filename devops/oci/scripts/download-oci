@@ -1,0 +1,110 @@
+#!/bin/bash
+
+# --- scp-oci-download ---
+
+# --- HELP MENU ---
+if [ "$1" == "--help" ] || [ "$1" == "-h" ]; then
+    echo "======================================================"
+    echo " OCI Bastion SCP Download Helper"
+    echo "======================================================"
+    echo "Usage:"
+    echo "  <caller_script> [scp_options] <remote_source_file(s)> <local_destination_path>"
+    echo ""
+    echo "Description:"
+    echo "  Securely downloads files from an OCI private instance via a Bastion tunnel."
+    echo "  The remote source paths are automatically prefixed with the target server's"
+    echo "  user and IP address defined in the caller script."
+    echo ""
+    echo "Arguments:"
+    echo "  remote_source_file(s)   The file(s) or directory on the remote server you want to download."
+    echo "  local_destination_path  The absolute or relative path on your local machine."
+    echo "======================================================"
+    return 0 2>/dev/null || exit 0
+fi
+
+echo "Checking for existing active sessions..."
+
+ACTIVE_SESSIONS=$(oci bastion session list --bastion-id "$BASTION_ID" --session-lifecycle-state ACTIVE --all 2>/dev/null | jq -r --arg tid "$TARGET_ID" '.data[]? | select(."target-resource-details"."target-resource-id" == $tid) | .id')
+
+if [ -n "$ACTIVE_SESSIONS" ]; then
+    echo "Found existing active session(s). Cleaning up..."
+    for SID in $ACTIVE_SESSIONS; do
+        oci bastion session delete --session-id "$SID" --force 2>/dev/null
+    done
+    sleep 4
+else
+    echo "No existing active sessions found."
+fi
+
+echo "Initiating NEW OCI Bastion Session..."
+
+SESSION_JSON=$(oci bastion session create-port-forwarding --bastion-id "$BASTION_ID" --target-resource-id "$TARGET_ID" --target-port 22 --ssh-public-key-file "${BASTION_KEY}.pub" --session-ttl 10800 2>/dev/null)
+
+SESSION_ID=$(echo "$SESSION_JSON" | jq -r '.data.id')
+
+if [ -z "$SESSION_ID" ] || [ "$SESSION_ID" == "null" ]; then
+    echo "Error: Failed to trigger bastion session creation."
+    return 1 2>/dev/null || exit 1
+fi
+
+echo "Waiting for session to become ACTIVE..."
+
+while true; do
+    STATE=$(oci bastion session get --session-id "$SESSION_ID" | jq -r '.data."lifecycle-state"')
+    if [ "$STATE" == "ACTIVE" ]; then
+        echo "State is ACTIVE. Proceeding to connection phase..."
+        break
+    elif [ "$STATE" == "FAILED" ] || [ "$STATE" == "DELETED" ]; then
+        echo "Error: Session failed to provision or was deleted."
+        return 1 2>/dev/null || exit 1
+    fi
+    sleep 3
+done
+
+SSH_METADATA=$(oci bastion session get --session-id "$SESSION_ID" | jq -r '.data."ssh-metadata".command')
+BASTION_TARGET=$(echo "$SSH_METADATA" | grep -oE 'ocid1\.bastionsession\.[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+')
+
+# --- ARGUMENT PROCESSING ---
+args=("$@")
+LAST_INDEX=$((${#args[@]} - 1))
+
+LOCAL_DEST="${args[$LAST_INDEX]}"
+unset "args[$LAST_INDEX]"
+
+# Format remote source paths by prepending user and IP
+FORMATTED_SOURCES=()
+for src in "${args[@]}"; do
+    # Revert local bash $HOME expansion back to relative ~/ for the remote server if necessary
+    if [[ "$src" == "$HOME" ]]; then
+        src="~/"
+    elif [[ "$src" == "$HOME/"* ]]; then
+        src="~/${src#$HOME/}"
+    fi
+    FORMATTED_SOURCES+=("${TARGET_USER}@${TARGET_IP}:${src}")
+done
+
+# --- RETRY LOGIC FIX ---
+RETRY_COUNT=0
+while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
+    echo "Attempting SCP download to local path: $LOCAL_DEST (Attempt $((RETRY_COUNT + 1)) of $MAX_RETRIES)..."
+
+    scp -i "$INSTANCE_KEY" -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ProxyCommand="ssh -i $BASTION_KEY -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -W %h:%p -p 22 $BASTION_TARGET" "${FORMATTED_SOURCES[@]}" "$LOCAL_DEST"
+
+    SCP_EXIT_CODE=$?
+    if [ $SCP_EXIT_CODE -eq 0 ]; then
+        echo "Download successful."
+        return 0 2>/dev/null || exit 0
+    fi
+
+    # Trigger backoff on ANY failure, capturing the SCP exit code 1
+    echo "SCP failed with exit code $SCP_EXIT_CODE (Likely Bastion key propagation delay)."
+    RETRY_COUNT=$((RETRY_COUNT + 1))
+
+    if [ $RETRY_COUNT -lt $MAX_RETRIES ]; then
+        echo "Retrying in $BACKOFF seconds..."
+        sleep $BACKOFF
+        BACKOFF=$((BACKOFF * 2))
+    fi
+done
+
+echo "All $MAX_RETRIES attempts exhausted."
