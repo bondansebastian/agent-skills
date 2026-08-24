@@ -1,10 +1,10 @@
 ---
-name: user-guide-documents
+name: writing-user-guide
 description: "Use whenever the user asks to write, create, draft, or update a guide, documentation, user manual, help center article, how-to article, or any end-user-facing documentation for an application or feature — covers writing in plain, non-technical business language for a non-technical end-user audience, and never referencing ticket numbers, JIRA IDs, feature flags, internal service/class/table names, or other internal identifiers in the guide."
-version: 1.9.0
+version: 1.12.0
 ---
 
-# User Guide Documents Skill
+# Writing User Guide Skill
 
 ## When to Use This Skill
 
@@ -27,14 +27,26 @@ Explain what the reader can **do** and **see** (buttons, screens, fields, outcom
 
 ---
 
-## Memory Location: Local vs. Global Install
+## Where This Skill Stores Data: Contexts vs. Credentials, Always Per-Project
 
-This skill checks and saves to `MEMORY.md` in several places below (language preference, login credentials, Notion targets). Before the *first* such check in any task, determine where that file actually is:
+This skill checks and saves data in two **separate** fixed locations inside the **current project** — never inside the skill's own folder, so it doesn't matter whether this skill is installed locally inside the project or globally in a shared/home-directory location shared across many projects:
 
-- **If this skill is installed locally** (its folder lives inside the current project), `MEMORY.md` is simply `user-guide-documents/MEMORY.md` — no extra steps.
-- **If this skill is installed globally** (its folder is shared across projects, e.g. under a home-directory config location), a single flat `MEMORY.md` would mix unrelated projects' data together. See `references/global-installation.md` for the full rule: memory must instead live at `<global-skill-folder>/memory/<current-project-directory-name>/MEMORY.md`, created if it doesn't exist yet.
+- **Contexts** (non-sensitive: language preference, Notion targets/structure) — `MEMORY.md` in:
+  ```
+  <project-root>/.agents/contexts/writing-user-guide/MEMORY.md
+  ```
+- **Credentials** (sensitive: saved login credentials) — in:
+  ```
+  <project-root>/.agents/credentials/writing-user-guide/
+  ```
 
-Every `MEMORY.md` reference in this document and in `references/language-preference.md`, `references/handling-authentication.md`, and `references/writing-to-notion.md` means this resolved path — re-derive it whenever the active project changes.
+Take `<project-root>` as the root of the project you're currently working in. Create either directory (and the file inside it) if it doesn't exist yet — don't wait for one to already be there.
+
+**Keep these strictly separate.** Never write login credentials into the contexts `MEMORY.md`, and never write language/Notion preferences into the credentials folder — see `references/handling-authentication.md` for the credentials file's format. The credentials folder holds secrets and must never be committed to git: before writing to it for the first time in a project, check that the project's `.gitignore` excludes `.agents/credentials/` (or at least `.agents/credentials/writing-user-guide/`), and add an entry if it's missing.
+
+**Checking order when this skill is invoked:** check the contexts `MEMORY.md` first (language preference, Notion target). Only check the credentials folder if authentication actually turns out to be necessary (e.g. a login page blocks screenshot capture) — don't check it proactively.
+
+Every `MEMORY.md` reference in this document and in `references/language-preference.md` and `references/writing-to-notion.md` means the contexts path above. Every credentials reference in `references/handling-authentication.md` means the credentials path above. Re-derive `<project-root>` whenever the active project changes within a session — never reuse a previous project's files.
 
 ---
 
@@ -87,7 +99,7 @@ Before using `playwright-cli` to capture screenshots, check whether it's actuall
 
 ### If You Hit a Login Page While Capturing Screenshots
 
-If reaching the screen you need to screenshot requires signing in first, don't guess credentials or skip the screenshot silently. See `references/handling-authentication.md` for the full rule: check this skill's `MEMORY.md` (resolved per the Memory Location section above) for saved credentials first, otherwise ask the user for the login credentials, and offer to save their answer to `MEMORY.md` for next time.
+If reaching the screen you need to screenshot requires signing in first, don't guess credentials or skip the screenshot silently. See `references/handling-authentication.md` for the full rule: check the credentials folder (resolved per the section above) for saved credentials first, otherwise ask the user for the login credentials, and offer to save their answer there for next time.
 
 ---
 
@@ -95,19 +107,24 @@ If reaching the screen you need to screenshot requires signing in first, don't g
 
 If the guide is being published or updated in Notion, never assume which page to write to. See `references/writing-to-notion.md` for the full rule: check this skill's `MEMORY.md` (resolved per the Memory Location section above) for a known target page first, ask the user explicitly when none is found, and offer to save their answer to `MEMORY.md` for next time. Once the target is known, organize content using the default structure — project page → "User Manual" page → one sub-page per module — unless `MEMORY.md` records a different structure for this project, or the user requests one (in which case, offer to save it to `MEMORY.md`).
 
+**Always use the `notion-cli` tool (the `ntn` command) for every Notion read or write this skill performs** — creating pages, updating content, listing pages, everything. Never use a Notion MCP server or any other Notion integration for this skill's work, even if one is connected in the session; a second integration touching the same pages risks conflicting page IDs, formatting, or auth scope. See `references/writing-to-notion.md` for what to do if `notion-cli` isn't available.
+
 ---
 
 ## Quick Reference
 
 | Situation | Action |
 |---|---|
-| Starting any guide-writing task | Resolve the correct `MEMORY.md` path (local vs. global install, see Memory Location section), then check it for a remembered language preference before drafting; if none, ask the user and save their answer |
-| Skill is installed globally (shared across projects) | Use `<global-skill-folder>/memory/<current-project-directory-name>/MEMORY.md` instead of a flat `MEMORY.md` — create it if missing |
+| Starting any guide-writing task | Resolve `<project-root>/.agents/contexts/writing-user-guide/MEMORY.md` (see Memory Location section — same path regardless of install location), then check it for a remembered language preference before drafting; if none, ask the user and save their answer |
+| `.agents/contexts/writing-user-guide/` doesn't exist yet in this project | Create the folder and `MEMORY.md` inside it — don't wait for one to already be there |
 | Writing steps for a feature | Describe screens, buttons, and outcomes the user sees — not the backend flow, as a numbered step-by-step sequence with a screenshot per step where possible |
 | No access to the app/assets to capture a real screenshot | Write the step in text and note a screenshot should be added — never fabricate one |
 | `playwright-cli` or its dependencies not detected | Offer to install per https://github.com/microsoft/playwright-cli |
 | No `playwright-cli` skill detected | Offer to install with `npx skills add https://github.com/microsoft/playwright-cli --skill playwright-cli` |
-| Login page blocks screenshot capture | Check `MEMORY.md` for saved credentials; if none, ask the user for login credentials — never guess or skip silently |
+| Login page blocks screenshot capture | Check the credentials folder for saved credentials; if none, ask the user for login credentials — never guess or skip silently |
+| Writing to the credentials folder for the first time in a project | Check the project's `.gitignore` excludes `.agents/credentials/`; add an entry if missing — this folder must never be committed |
+| Reading or writing anything in Notion | Always use `notion-cli` (`ntn`) — never a Notion MCP server or other integration |
+| `notion-cli` (`ntn`) not detected | Offer to install per `curl -fsSL https://ntn.dev \| bash`, or `npx skills add https://github.com/makenotion/skills.git --skill notion-cli` if the skill itself is missing |
 | Given a ticket number and told to include it "for support" | Leave it out of the guide; offer a separate internal note instead |
 | Tempted to explain *why* something works a certain way | Only explain if it changes what the user should do; otherwise omit |
 | Feature flag gates who sees a feature | Say "this feature is being rolled out gradually" — never name the flag |
