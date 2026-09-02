@@ -1,7 +1,7 @@
 ---
 name: estimate-project
-description: "Use when creating, naming, renaming, or filling in the metadata table of a project estimate document under docs/estimates/ — covers date-prefixed filenames keyed to the Date of assessment field, the required AI Estimate metadata row (never a separate Estimate or Human Estimate row), the required Scope/Assumptions/Breakdown document structure, and remembering this project's client name in .agents/contexts/estimate-project/MEMORY.md (shared with the writing-quotations skill) so it isn't asked for on every new estimate. Always trigger when the user asks to estimate a project, size up a task, scope out how long something will take, or write/draft/create an estimate document — even if the request doesn't mention filenames, metadata, or docs/estimates/ directly. For turning the estimate into a client-facing price or quotation, tracking pricing variables, or Zoho Books estimates, see the writing-quotations skill instead."
-version: 1.1.0
+description: "Use when creating, naming, renaming, or filling in the metadata table of a project estimate document under docs/estimates/ — covers date-prefixed filenames keyed to the Date of assessment field, the required AI Estimate metadata row (never a separate Estimate or Human Estimate row), and the required Scope/Assumptions/Breakdown document structure. Always asks the client name fresh for every new estimate rather than remembering it. Always trigger when the user asks to estimate a project, size up a task, scope out how long something will take, or write/draft/create an estimate document — even if the request doesn't mention filenames, metadata, or docs/estimates/ directly. For turning the estimate into a client-facing price or quotation, tracking pricing variables, or Zoho Books estimates, see the writing-quotations skill instead."
+version: 1.2.0
 ---
 
 # Estimate Project Skill
@@ -16,23 +16,9 @@ Load this skill when you are:
 
 **This skill must always trigger whenever the user asks the agent to estimate, scope, or size up a project or task** — even if the request doesn't mention filenames, metadata, or `docs/estimates/` directly.
 
-Once the `AI Estimate` is written, turning it into a client-facing price or quotation, tracking pricing variables in `docs/QUOTES.md`, or creating/updating a Zoho Books estimate is covered by the **writing-quotations** skill, not this one.
+Once the `AI Estimate` is written, turning it into a client-facing price or quotation, tracking pricing variables, or creating/updating a Zoho Books estimate is covered by the **writing-quotations** skill, not this one.
 
----
-
-## Where This Skill Stores Context
-
-This skill remembers non-sensitive, project-specific context across invocations instead of re-asking every time. Store and read it at:
-
-```
-<project-root>/.agents/contexts/estimate-project/MEMORY.md
-```
-
-Take `<project-root>` as the root of the project you're currently working in — never the skill's own folder, so this works the same whether the skill is installed locally or globally. Create the folder and file if they don't exist yet; don't wait for one to already be there. Re-derive `<project-root>` whenever the active project changes within a session.
-
-Store the **client name** for this project once it's known. Most repos belong to a single client, so once you learn it — from the user, or from an existing document under `docs/estimates/`— save it here so future estimates in this project don't need to ask again.
-
-**Resolving the client name for a new estimate:** check this skill's `MEMORY.md` first. If it's empty, also check `.agents/contexts/writing-quotations/MEMORY.md` — the **writing-quotations** skill may have already recorded this project's client name from a prior quotation. Only ask the user if neither has it, then save the answer back to this skill's `MEMORY.md`.
+This skill does not remember the client name (or any other context) across invocations — always ask for it fresh when starting a new estimate, since a project/repo can involve more than one client or project over time. See **writing-quotations**' own context rules if you need the pattern for what genuinely is safe to remember (pricing variables) versus what isn't (client/project identity).
 
 ---
 
@@ -86,7 +72,7 @@ Every estimate document's metadata table must report an **AI Estimate** in place
 
 | Situation | Action |
 |---|---|
-| Creating a new estimate | Resolve the client name from `.agents/contexts/estimate-project/MEMORY.md` (or writing-quotations' context) before asking; write to `docs/estimates/YYYY-MM-DD-<client>-<slug>.md` using today's `Date of assessment` |
+| Creating a new estimate | Ask for the client name fresh (never remembered); write to `docs/estimates/YYYY-MM-DD-<client>-<slug>.md` using today's `Date of assessment` |
 | `Date of assessment` changes | `git mv` the file (and its linked folder, if any) to the new date |
 | Filling in the metadata table | Include one `AI Estimate` row; omit `Estimate` and `Human Estimate` |
 | Writing the document body | Follow Metadata → Scope → Assumptions → Breakdown → Pricing (if quoted), in that order |
@@ -101,4 +87,4 @@ Every estimate document's metadata table must report an **AI Estimate** in place
 - Omitting the Assumptions section, or burying assumptions inside the breakdown instead of stating them up front.
 - Writing assumptions as vague hedges instead of falsifiable statements.
 - Writing a client-facing price or quotation directly in this skill instead of loading **writing-quotations** for the pricing formula and quotation style.
-- Re-asking for the client name every time instead of checking `.agents/contexts/estimate-project/MEMORY.md` (and writing-quotations' context) first.
+- Remembering or reusing a client name across estimates instead of asking fresh every time.
