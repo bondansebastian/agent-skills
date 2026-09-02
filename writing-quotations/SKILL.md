@@ -1,10 +1,10 @@
 ---
-name: quote-tracking
+name: writing-quotations
 description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text, maintaining docs/QUOTES.md (the internal pricing-variable ledger of buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read docs/QUOTES.md or ask — writing the quotation in plain business bullet points (distinct from docs/QUOTES.md), the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/QUOTES.md or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
-version: 1.0.0
+version: 1.0.1
 ---
 
-# Quote Tracking Skill
+# Writing Quotations Skill
 
 ## When to Use This Skill
 
