@@ -24,11 +24,11 @@ Internal audit trail (stays in the estimate document, not sent to client):
 
 ```
 AI Estimate: 3 hours
-Buffer multiplier: 10
-Quoted time: 10 × 3 hours = 30 hours
+Buffer multiplier: 6
+Quoted time: 6 × 3 hours = 18 hours
 Man-day hours: 6
 Base man-day rate: 800 USD
-Price: (30 / 6) × 800 USD = 4,000 USD
+Price: (18 / 6) × 800 USD = 2,400 USD
 ```
 
 Client-facing quotation, written from the same numbers (Indonesian, the default language):
@@ -38,8 +38,8 @@ Client-facing quotation, written from the same numbers (Indonesian, the default 
 - Deliverables:
   - <hasil/fitur konkret #1 yang akan diterima klien>
   - <hasil/fitur konkret #2 yang akan diterima klien>
-- Estimasi waktu pengerjaan: ~5 hari kerja
-- Investasi: 4.000.000 IDR
+- Estimasi waktu pengerjaan: ~3 hari kerja
+- Investasi: 2.400.000 IDR
 ```
 
 ## Common Mistakes

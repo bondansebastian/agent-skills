@@ -1,7 +1,7 @@
 ---
 name: writing-quotations
 description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text or document, maintaining this project's pricing-variable ledger (buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read the saved ledger in .agents/contexts/writing-quotations/MEMORY.md or ask — writing the quotation in plain business bullet points with a clear Deliverables section, in Indonesian by default unless the user explicitly asks for another language (remembered per project in that same context file), always asking the client name and project name fresh for every quotation rather than reusing a remembered one, always saving it as a dated Markdown file under docs/quotations/ (the same naming convention as the estimate-project skill), only producing a polished .docx version when the user explicitly asks for one, the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/quotations/ or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
-version: 1.4.0
+version: 1.5.0
 ---
 
 # Writing Quotations Skill
@@ -46,22 +46,22 @@ Store:
 
 When a client-facing quote is needed, derive the price from the `AI Estimate` with this formula. Every number in the formula is a named variable — none are hardcoded into the skill or the document:
 
-- **Quoted time** = `buffer multiplier × AI Estimate` — client-facing buffer for review cycles, revisions, and coordination overhead not captured in raw active-session time. Typical value: `10`.
+- **Quoted time** = `buffer multiplier × AI Estimate` — client-facing buffer for review cycles, revisions, and coordination overhead not captured in raw active-session time. Default value: `6`.
 - **Man-day hours** = length of one billable man-day. Typical value: `6 hours`.
 - **Price** = `(Quoted time / man-day hours) × base man-day rate`, denominated in `currency`.
 
 Variables:
 
-| Variable | Meaning | Source | Typical value |
+| Variable | Meaning | Source | Default value |
 |---|---|---|---|
 | `AI Estimate` | Wall-clock active-session time, from the estimate document's metadata table | The estimate document | — |
 | `Quoted time` | `buffer multiplier × AI Estimate` | Derived | — |
-| `buffer multiplier` | How many times over the AI Estimate to quote, to cover review cycles, revisions, and coordination overhead | This skill's `MEMORY.md` (see Where This Skill Stores Context), or ask the user | `10` |
+| `buffer multiplier` | How many times over the AI Estimate to quote, to cover review cycles, revisions, and coordination overhead | This skill's `MEMORY.md` (see Where This Skill Stores Context), or ask the user | `6` |
 | `man-day hours` | Hours in one billable man-day | This skill's `MEMORY.md`, or ask the user | `6` |
 | `base man-day rate` | Client/org day rate used to convert time into money | This skill's `MEMORY.md`, or ask the user | — |
 | `currency` | Unit `base man-day rate` and `Price` are denominated in (e.g. `USD`, `IDR`, `EUR`) | This skill's `MEMORY.md`, or ask the user | — |
 
-**Before writing a price, check this skill's `MEMORY.md` for existing values of `buffer multiplier`, `man-day hours`, `base man-day rate`, and `currency`.** For any of the four not yet recorded there, ask the user for it — do not assume, invent, or silently default a value, including the currency symbol/code, even the typical ones above. When asking, explain what each is for:
+**Before writing a price, check this skill's `MEMORY.md` for existing values of `buffer multiplier`, `man-day hours`, `base man-day rate`, and `currency`.** For any of the four not yet recorded there, ask the user for it — do not assume, invent, or silently default a value, including the currency symbol/code, even the defaults above. When asking, explain what each is for:
 
 - `buffer multiplier`: scales `AI Estimate` up into `Quoted time` to cover review cycles, revisions, and coordination overhead the raw session time doesn't capture.
 - `man-day hours`: the divisor that converts `Quoted time` into a number of man-days.
@@ -74,12 +74,12 @@ Show the full derivation in the estimate document, not just the final figure, so
 
 ```
 AI Estimate: 3 hours
-Buffer multiplier: 10
-Quoted time: 10 × 3 hours = 30 hours
+Buffer multiplier: 6
+Quoted time: 6 × 3 hours = 18 hours
 Man-day hours: 6
 Base man-day rate: 800 USD
 Currency: USD
-Price: (30 / 6) × 800 USD = 4,000 USD
+Price: (18 / 6) × 800 USD = 2,400 USD
 ```
 
 This derivation is the internal audit trail for the estimate document — it is not what gets sent to the client. When writing the actual client-facing quotation text, read `references/writing-quotations.md` first.
@@ -137,7 +137,7 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 ## Common Mistakes
 
 - Writing a hardcoded price without showing the `AI Estimate` → `Quoted time` → `base man-day rate` derivation.
-- Assuming, inventing, or silently defaulting `buffer multiplier`, `man-day hours`, `base man-day rate`, or `currency` instead of reading them from `MEMORY.md` or asking the user — including quietly using the "typical" values without confirming them, or assuming `$`/USD by default.
+- Assuming, inventing, or silently defaulting `buffer multiplier`, `man-day hours`, `base man-day rate`, or `currency` instead of reading them from `MEMORY.md` or asking the user — including quietly using the default values without confirming them, or assuming `$`/USD by default.
 - Sending a client the internal derivation or jargon (`AI Estimate`, `buffer multiplier`, etc.) instead of a plain-language, bulleted quotation — see `references/writing-quotations.md`.
 - **Remembering or reusing a client name or project name across quotations** instead of asking fresh every time — this is the opposite of the pricing variables, which genuinely are worth remembering.
 - Skipping the `docs/quotations/` file and only pasting the quotation text into the conversation.
