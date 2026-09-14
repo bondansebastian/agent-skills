@@ -1,7 +1,7 @@
 ---
 name: jira
-description: Use when the user mentions Jira issues (e.g., "PROJ-123"), asks about tickets, wants to create/view/update issues, check sprint status, or manage their Jira workflow. Triggers on keywords like "jira", "issue", "ticket", "sprint", "backlog", or issue key patterns.
-version: 1.0.2
+description: Use when the user mentions Jira issues (e.g., "PROJ-123"), asks about tickets, wants to create/view/update issues, check sprint status, or manage their Jira workflow. Triggers on keywords like "jira", "issue", "ticket", "sprint", "backlog", or issue key patterns. Always sets a time estimate on created/updated issues via Jira's native "Original estimate" field (never the description) — combining an AI Estimate (time for an AI agent to do the task) with a Human review estimate (AI Estimate × a project-specific multiplier read from `.agents/contexts/jira/MEMORY.md`, defaulting to `1` when unset, same pattern as the writing-quotations skill's pricing ledger).
+version: 1.0.4
 license: MIT
 ---
 
@@ -89,15 +89,59 @@ When a user mentions an issue key in conversation:
 **Creating tickets:**
 1. Research context if user references code/tickets/PRs
 2. Draft ticket content
-3. Review with user
-4. Create using appropriate backend
+3. Compute the time estimate (see Time Estimates below) and set it on the `timetracking.originalEstimate` field — never in the description
+4. Review with user
+5. Create using appropriate backend
 
 **Updating tickets:**
 1. Fetch issue details first
 2. Check status (careful with in-progress tickets)
 3. Show current vs proposed changes
-4. Get approval before updating
-5. Add comment explaining changes
+4. If the issue has no Original Estimate yet, compute one (see Time Estimates below) and include it in the update
+5. Get approval before updating
+6. Add comment explaining changes
+
+---
+
+## Where This Skill Stores Context
+
+This skill remembers one non-sensitive, project-specific value across invocations instead of re-asking every time. Store and read it at:
+
+```
+<project-root>/.agents/contexts/jira/MEMORY.md
+```
+
+Take `<project-root>` as the root of the project currently being worked in — never the skill's own folder, so this works the same whether the skill is installed locally or globally. Create the folder and file if they don't exist yet; don't wait for one to already be there.
+
+Store:
+
+- **Human review multiplier** — the factor applied to the `AI Estimate` to derive the `Human review estimate`. Defaults to `1` when not recorded here. See Time Estimates below for the full read/default/save rule.
+
+Nothing else about a specific issue (summary, client, assignee, etc.) belongs in this file — those change per ticket and are always re-derived from the issue itself.
+
+---
+
+## Time Estimates (Original Estimate Field)
+
+**Every issue this skill creates, and every issue it updates that doesn't already have one, must get a time estimate set on Jira's native `Original Estimate` field (the `timetracking.originalEstimate` field in the MCP/API) — never written into the description, a comment, or a custom text field.** A description-embedded estimate doesn't feed Jira's time-tracking reports or burndown charts, which is the entire point of using the real field.
+
+The Original Estimate is the sum of two parts:
+
+- **AI Estimate** — wall-clock active-session time for an AI coding agent (e.g. Claude Code) to complete the issue's scope, using the same definition as the estimate-project skill (e.g. `45 minutes`, `3 hours`). Ask the user for this, or derive it from an existing `docs/estimates/` document if the issue is already tied to one — never invent a number.
+- **Human review estimate** = `AI Estimate × human review multiplier` — the time a human needs to review, test, and accept the AI's work on this issue. The multiplier is a project-specific constant, read from `.agents/contexts/jira/MEMORY.md` — **default `1`** (review time equal to AI time) when nothing is recorded there.
+
+**Original Estimate = AI Estimate + Human review estimate**, converted to Jira's duration string format (e.g. `2h`, `1d 4h`) before being set on `timetracking.originalEstimate`.
+
+**Before computing a human review estimate, check `.agents/contexts/jira/MEMORY.md` (see Where This Skill Stores Context above) for an existing `human review multiplier`.** If it isn't recorded there, use the default of `1` and tell the user this default was applied. If the user provides a different value at any point — now or later — save it to `MEMORY.md` so future issues in this project use it without asking again.
+
+Show the derivation to the user before creating/updating the issue, so the estimate is auditable:
+
+```
+AI Estimate: 3 hours
+Human review multiplier: 1 (default — not overridden in .agents/contexts/jira/MEMORY.md)
+Human review estimate: 1 × 3 hours = 3 hours
+Original Estimate (set on issue): 6h
+```
 
 ---
 
@@ -143,6 +187,10 @@ Ask yourself:
 - **NEVER assign using display name (MCP)** — Only account IDs work. Always call `lookupJiraAccountId` first, or assignment silently fails.
 
 - **NEVER edit description without showing original** — Jira has no undo. User must see what they're replacing.
+
+- **NEVER put a time estimate in the description, a comment, or a custom field** — Always set it on the native `timetracking.originalEstimate` (Original Estimate) field, per Time Estimates above.
+
+- **NEVER apply a human review multiplier other than the project's saved value without telling the user** — Read it from `.agents/contexts/jira/MEMORY.md`, falling back to the default of `1` only when nothing is recorded; per Time Estimates above.
 
 - **NEVER use `--no-input` without all required fields (CLI)** — Fails silently with cryptic errors. Check project's required fields first.
  - **NEVER use non-interactive flags without all required fields** — Non-interactive operations can fail silently; check project's required fields first.

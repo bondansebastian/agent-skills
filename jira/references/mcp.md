@@ -46,6 +46,7 @@ Create a new issue.
 - `priority`: Priority name (Highest, High, Medium, Low, Lowest)
 - `labels`: Array of labels
 - `components`: Array of component names
+- `timetracking`: `{ originalEstimate: "<duration>" }` — sets the native Original Estimate field (e.g. `"4h 30m"`, `"2d"`). Always set this — see the jira skill's Time Estimates section for how the value is derived. Never substitute a description line for this field.
 - Custom fields as needed
 
 **Example:**
@@ -55,7 +56,8 @@ mcp__atlassian__createJiraIssue(
   issueType: "Story",
   summary: "Implement user authentication",
   description: "Add OAuth2 authentication flow...",
-  labels: ["backend", "security"]
+  labels: ["backend", "security"],
+  timetracking: { originalEstimate: "4h 30m" }
 )
 ```
 
@@ -64,13 +66,21 @@ Update an existing issue.
 
 **Parameters:**
 - `issueKey` (required): Issue to update
-- Any field to update (summary, description, assignee, etc.)
+- Any field to update (summary, description, assignee, `timetracking`, etc.)
 
 **Example:**
 ```
 mcp__atlassian__editJiraIssue(
   issueKey: "PROJ-123",
   description: "Updated description with more details..."
+)
+```
+
+**Example — setting the Original Estimate on an issue that doesn't have one:**
+```
+mcp__atlassian__editJiraIssue(
+  issueKey: "PROJ-123",
+  timetracking: { originalEstimate: "6h" }
 )
 ```
 
