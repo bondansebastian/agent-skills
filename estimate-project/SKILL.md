@@ -1,7 +1,7 @@
 ---
 name: estimate-project
 description: "Use when creating, naming, renaming, or filling in the metadata table of a project estimate document under docs/estimates/ — covers date-prefixed filenames keyed to the Date of assessment field, the required AI Estimate metadata row (never a separate Estimate or Human Estimate row), and the required Scope/Assumptions/Breakdown document structure with a unique index on every section and sub-section (mirrored by the client quotation). Always asks the client name fresh for every new estimate rather than remembering it. Always trigger when the user asks to estimate a project, size up a task, scope out how long something will take, or write/draft/create an estimate document — even if the request doesn't mention filenames, metadata, or docs/estimates/ directly. For turning the estimate into a client-facing price or quotation, tracking pricing variables, or Zoho Books estimates, see the writing-quotations skill instead."
-version: 1.4.0
+version: 1.4.1
 ---
 
 # Estimate Project Skill
@@ -51,7 +51,8 @@ Don't skip or reorder sections. A document missing an Assumptions section is inc
 ### Section Indexing
 
 - Use hierarchical decimal indices: top-level sections are `1`, `2`, `3`…; sub-sections `3.1`, `3.2`…; deeper levels `3.1.1`… Put the index in the heading or at the start of the bullet/row (`### 3.1 Login page`, `- 2.1 Assumes …`), so any item can be cited by index alone.
-- **Every** section and sub-section gets an index — including each individual assumption (`2.1`, `2.2`, …) and each breakdown item. No unnumbered items, no duplicate indices.
+- **Every** section and sub-section gets an index — including each individual assumption (`2.1`, `2.2`, …) and each breakdown item — except under the single sub-item rule below. No duplicate indices.
+- **Single sub-item rule:** a section with only one sub-item gets no sub-index — the sub-item's text *is* the section's description (e.g. `## 2 Assumptions` followed by the one assumption as plain text, not `2.1`). Sub-indices exist only when a section has two or more sub-items. When a later change adds a second item, the agent **must restructure that section**: the existing description becomes `x.1`, the new item becomes `x.2`, and the quotation's matching section is restructured the same way. The same applies in reverse when removal leaves one item — but only for sections whose remaining item has no index cited elsewhere; otherwise keep the sub-index to avoid breaking references.
 - Indices are **stable**: when adding an item, take the next free index at that level; when removing one, don't renumber the others or reuse its index (note it as `3.2 (removed)` only if needed). References from confirmations, quotations, and Zoho Books must stay valid.
 - **The client quotation mirrors this structure** (see the **writing-quotations** skill): same top-level numbering (`1` Scope, `2` Assumptions, `3` Breakdown ↔ Deliverables, `4` Pricing), and each quotation deliverable reuses the index of the breakdown item it is priced from (quotation `3.1` ↔ estimate `3.1`). When the estimate's structure changes, flag that the quotation needs the matching change.
 
@@ -116,6 +117,7 @@ Every estimate document's metadata table must report an **AI Estimate** in place
 - Omitting the Assumptions section, or burying assumptions inside the breakdown instead of stating them up front.
 - Writing assumptions as vague hedges instead of falsifiable statements.
 - Writing a client-facing price or quotation directly in this skill instead of loading **writing-quotations** for the pricing formula and quotation style.
+- Giving a section a lone sub-item (`2.1` with no `2.2`) instead of making it the section description, or adding a second item without restructuring the section.
 - Leaving any section, sub-section, assumption, or breakdown item without an index, duplicating an index, or renumbering existing items so old references break.
 - Letting the estimate's structure drift from the client quotation's (different top-level sections, or deliverables that don't map to a breakdown index).
 - Editing the estimate document before showing the user the upcoming changes in a table, or leaving out the effort change / total `AI Estimate` delta.

@@ -1,7 +1,7 @@
 ---
 name: writing-quotations
 description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text or document, maintaining this project's pricing-variable ledger (buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read the saved ledger in .agents/contexts/writing-quotations/MEMORY.md or ask — writing the quotation in plain business bullet points with a clear Deliverables section and a unique index on every section and sub-section that mirrors the estimate document's structure, in Indonesian by default unless the user explicitly asks for another language (remembered per project in that same context file), always asking the client name and project name fresh for every quotation rather than reusing a remembered one, always saving it as a dated Markdown file under docs/quotations/ (the same naming convention as the estimate-project skill), only producing a polished .docx version when the user explicitly asks for one, the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/quotations/ or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
-version: 1.7.0
+version: 1.7.1
 ---
 
 # Writing Quotations Skill
@@ -99,7 +99,8 @@ The quotation is the pricing text a client actually reads — not to be confused
 | `3` | Breakdown (tasks, with hours) | Deliverables (outcomes, no hours) — `3.x` reuses the index of the breakdown item it comes from |
 | `4` | Pricing (derivation) | Estimasi waktu & Investasi — `4.1` timeline, `4.2` price |
 
-- Use hierarchical decimal indices (`1`, `1.1`, `1.1.1`), written at the start of each heading/bullet, so any line can be cited by index alone. No unnumbered or duplicate indices.
+- Use hierarchical decimal indices (`1`, `1.1`, `1.1.1`), written at the start of each heading/bullet, so any line can be cited by index alone. No duplicate indices, and no unnumbered sub-items except under the single sub-item rule below.
+- **Single sub-item rule:** a section with only one sub-item gets no sub-index — the sub-item's text *is* the section's description (e.g. `1 Lingkup pekerjaan` followed by the one sentence, not `1.1`). Sub-indices exist only when a section has two or more sub-items. When more bullet points are needed later, the agent **must restructure the section**: the existing description becomes `x.1` and the new item `x.2`, matching the same change in the estimate document. Apply the rule identically in the estimate and the quotation so they stay aligned.
 - Indices are stable: new items take the next free index at that level; removed items' indices are never reused or renumbered.
 - Reword for the client (outcomes, plain language, no hours), but keep the same order and index. If an estimate item has no client-visible outcome, keep its index unused in the quotation rather than renumbering. If the estimate has no section for something the quotation needs, add it to the estimate first so the two stay aligned.
 - Whenever the estimate's structure or items change (or the quotation's), tell the user the other document needs the matching change.
@@ -182,6 +183,7 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 - Blocking on, or repeatedly re-asking for, the client name or project name instead of falling back to a content-based value when the user doesn't answer.
 - Re-asking for a pricing variable every time instead of checking `.agents/contexts/writing-quotations/MEMORY.md` first.
 - Silently reusing a non-Indonesian language for a new quotation in the same project without it having been saved to `MEMORY.md` as this project's preference.
+- Giving a section a lone sub-item (`1.1` with no `1.2`) instead of making it the section description, or adding a second item without restructuring the section.
 - Leaving any quotation section or sub-section unindexed, duplicating an index, renumbering existing items, or letting the quotation's structure/indices drift from its source estimate document.
 - Omitting a Deliverables section, or describing deliverables as internal tasks/hours instead of outcomes the client will receive.
 - Writing the quotation in English (or any language) by default instead of Indonesian, without the user having asked for it.

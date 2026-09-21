@@ -16,7 +16,7 @@ A **quotation** is the client-facing pricing communication itself — the text a
   - `base man-day rate` — "daily rate" or "day rate" if a rate needs to be shown at all.
   - `Price` — "Investment" ("Investasi") or "Total" reads better to a client than an internal derivation label.
 - **Always include a Deliverables section.** State the concrete things the client will receive — features shipped, documents handed over, environments configured — as outcomes, not as the internal task/hour breakdown from the estimate document's Breakdown section. This is what tells the client exactly what they're paying for, separate from how long it takes or what it costs.
-- **Index every section and sub-section, mirroring the estimate document.** Number them hierarchically (`1`, `1.1`, `1.1.1`) at the start of each heading/bullet, using the same top-level structure as the estimate: `1` Lingkup, `2` Asumsi, `3` Deliverables (each `3.x` reuses the index of the estimate Breakdown item it comes from), `4` Estimasi waktu & Investasi. Indices are unique and stable — never renumber or reuse them.
+- **Index every section and sub-section, mirroring the estimate document.** Number them hierarchically (`1`, `1.1`, `1.1.1`) at the start of each heading/bullet, using the same top-level structure as the estimate: `1` Lingkup, `2` Asumsi, `3` Deliverables (each `3.x` reuses the index of the estimate Breakdown item it comes from), `4` Estimasi waktu & Investasi. Indices are unique and stable — never renumber or reuse them. **A section with only one sub-item has no sub-index:** that item is the section's description. When more bullets are needed later, restructure the section (existing text becomes `x.1`, new item `x.2`), in step with the estimate document.
 - **Show outputs, not derivation.** The full `AI Estimate → Quoted time → Price` derivation from the Pricing Method belongs in the estimate document's audit trail — it is not what goes into the client-facing quotation.
 
 ## Example
@@ -36,9 +36,9 @@ Client-facing quotation, written from the same numbers (Indonesian, the default 
 
 ```
 1. Lingkup pekerjaan
-   - 1.1 <deskripsi singkat pekerjaan>
+   <deskripsi singkat pekerjaan>  (satu item saja → menjadi deskripsi section, tanpa 1.1)
 2. Asumsi
-   - 2.1 <kondisi yang menjadi dasar penawaran>
+   <kondisi yang menjadi dasar penawaran>  (satu item saja → tanpa 2.1)
 3. Deliverables
    - 3.1 <hasil/fitur konkret #1 yang akan diterima klien>
    - 3.2 <hasil/fitur konkret #2 yang akan diterima klien>
