@@ -16,6 +16,7 @@ A **quotation** is the client-facing pricing communication itself — the text a
   - `base man-day rate` — "daily rate" or "day rate" if a rate needs to be shown at all.
   - `Price` — "Investment" ("Investasi") or "Total" reads better to a client than an internal derivation label.
 - **Always include a Deliverables section.** State the concrete things the client will receive — features shipped, documents handed over, environments configured — as outcomes, not as the internal task/hour breakdown from the estimate document's Breakdown section. This is what tells the client exactly what they're paying for, separate from how long it takes or what it costs.
+- **Index every section and sub-section, mirroring the estimate document.** Number them hierarchically (`1`, `1.1`, `1.1.1`) at the start of each heading/bullet, using the same top-level structure as the estimate: `1` Lingkup, `2` Asumsi, `3` Deliverables (each `3.x` reuses the index of the estimate Breakdown item it comes from), `4` Estimasi waktu & Investasi. Indices are unique and stable — never renumber or reuse them.
 - **Show outputs, not derivation.** The full `AI Estimate → Quoted time → Price` derivation from the Pricing Method belongs in the estimate document's audit trail — it is not what goes into the client-facing quotation.
 
 ## Example
@@ -34,18 +35,25 @@ Price: (18 / 6) × 800 USD = 2,400 USD
 Client-facing quotation, written from the same numbers (Indonesian, the default language):
 
 ```
-- Lingkup pekerjaan: <deskripsi singkat pekerjaan>
-- Deliverables:
-  - <hasil/fitur konkret #1 yang akan diterima klien>
-  - <hasil/fitur konkret #2 yang akan diterima klien>
-- Estimasi waktu pengerjaan: ~3 hari kerja
-- Investasi: 2.400.000 IDR
+1. Lingkup pekerjaan
+   - 1.1 <deskripsi singkat pekerjaan>
+2. Asumsi
+   - 2.1 <kondisi yang menjadi dasar penawaran>
+3. Deliverables
+   - 3.1 <hasil/fitur konkret #1 yang akan diterima klien>
+   - 3.2 <hasil/fitur konkret #2 yang akan diterima klien>
+4. Estimasi waktu & investasi
+   - 4.1 Estimasi waktu pengerjaan: ~3 hari kerja
+   - 4.2 Investasi: 2.400.000 IDR
 ```
+
+Here `3.1` and `3.2` carry the same indices as the estimate document's Breakdown items they come from.
 
 ## Common Mistakes
 
 - Sending a client the internal derivation (`AI Estimate`, `buffer multiplier`, etc.) instead of a plain-language summary.
 - Writing the quotation as prose instead of scannable bullet points.
+- Leaving sections unindexed, or using a structure/indices that don't match the source estimate document.
 - Omitting the Deliverables section, or listing internal tasks/hours instead of outcomes the client will actually receive.
 - Defaulting to English (or any other language) instead of Indonesian without the user having explicitly asked for it.
 - Confusing this quotation-writing guidance with the internal pricing-variable context in `.agents/contexts/writing-quotations/MEMORY.md`, which only tracks internal pricing variables and is never client-facing.

@@ -15,6 +15,7 @@ When updating an existing estimate in Zoho Books (e.g. via `update_estimate`), *
 These apply whenever a line item is created or added, whether via `create_estimate` or `update_estimate`:
 
 - **Always use the `service` item type for line items** — never `goods`/inventory item types, regardless of what the underlying work involved.
+- **Prefix each line item name with its quotation index** (e.g. `3.1 Admin dashboard`), so the line item maps directly to the quotation deliverable and estimate breakdown item.
 - **Don't expose detailed man-hour breakdowns** (hours × hourly rate, per-task hour counts, etc.) in line item names, descriptions, or notes, unless the user explicitly asks for that level of detail. Default to describing the deliverable or scope of the line item, not how the time was spent — this mirrors `references/writing-quotations.md`: the client sees outputs, not internal derivation.
 - If the user explicitly requests man-hour detail, include it — this rule only governs the unrequested default.
 

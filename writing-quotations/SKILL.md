@@ -1,7 +1,7 @@
 ---
 name: writing-quotations
-description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text or document, maintaining this project's pricing-variable ledger (buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read the saved ledger in .agents/contexts/writing-quotations/MEMORY.md or ask — writing the quotation in plain business bullet points with a clear Deliverables section, in Indonesian by default unless the user explicitly asks for another language (remembered per project in that same context file), always asking the client name and project name fresh for every quotation rather than reusing a remembered one, always saving it as a dated Markdown file under docs/quotations/ (the same naming convention as the estimate-project skill), only producing a polished .docx version when the user explicitly asks for one, the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/quotations/ or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
-version: 1.6.0
+description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text or document, maintaining this project's pricing-variable ledger (buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read the saved ledger in .agents/contexts/writing-quotations/MEMORY.md or ask — writing the quotation in plain business bullet points with a clear Deliverables section and a unique index on every section and sub-section that mirrors the estimate document's structure, in Indonesian by default unless the user explicitly asks for another language (remembered per project in that same context file), always asking the client name and project name fresh for every quotation rather than reusing a remembered one, always saving it as a dated Markdown file under docs/quotations/ (the same naming convention as the estimate-project skill), only producing a polished .docx version when the user explicitly asks for one, the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/quotations/ or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
+version: 1.7.0
 ---
 
 # Writing Quotations Skill
@@ -90,6 +90,20 @@ This derivation is the internal audit trail for the estimate document — it is 
 
 The quotation is the pricing text a client actually reads — not to be confused with this skill's internal pricing-variable context. Read `references/writing-quotations.md` before writing or editing any client-facing quotation: lead with bullet points and plain business language, not the internal derivation or technical terms.
 
+**Every quotation section and sub-section carries a unique index, and the quotation mirrors the structure of its source estimate document as closely as possible** (see the **estimate-project** skill's Section Indexing):
+
+| Index | Estimate document | Quotation |
+|---|---|---|
+| `1` | Scope | Lingkup pekerjaan |
+| `2` | Assumptions | Asumsi |
+| `3` | Breakdown (tasks, with hours) | Deliverables (outcomes, no hours) — `3.x` reuses the index of the breakdown item it comes from |
+| `4` | Pricing (derivation) | Estimasi waktu & Investasi — `4.1` timeline, `4.2` price |
+
+- Use hierarchical decimal indices (`1`, `1.1`, `1.1.1`), written at the start of each heading/bullet, so any line can be cited by index alone. No unnumbered or duplicate indices.
+- Indices are stable: new items take the next free index at that level; removed items' indices are never reused or renumbered.
+- Reword for the client (outcomes, plain language, no hours), but keep the same order and index. If an estimate item has no client-visible outcome, keep its index unused in the quotation rather than renumbering. If the estimate has no section for something the quotation needs, add it to the estimate first so the two stay aligned.
+- Whenever the estimate's structure or items change (or the quotation's), tell the user the other document needs the matching change.
+
 Every quotation must also state **Deliverables** — the concrete things the client will receive (features shipped, documents handed over, environments set up), stated as outcomes, not as the internal task breakdown from the estimate document. A client reading the quotation should know exactly what they're getting for the price, not just how long it takes.
 
 **Write the quotation in Indonesian by default.** Check this skill's `MEMORY.md` (see Where This Skill Stores Context above) for a saved language preference for this project first; if there isn't one, default to Indonesian. Only use another language when the user explicitly asks for it (e.g. the client is international, or the user says to write it in English) — and if they indicate this should apply to future quotations in this project too, save that preference to `MEMORY.md`. Don't infer the language from the client's name or domain.
@@ -119,12 +133,13 @@ Before changing an existing quotation document (`docs/quotations/...`, or a `.do
 
 The table has one row per change, in client-facing terms:
 
-| Section / Item | Change | Before | After |
-|---|---|---|---|
-| Deliverables: Admin dashboard | Added | — | Dashboard admin untuk mengelola pengguna |
-| Price | Modified | 2,400 USD | 3,000 USD |
-| Timeline | Removed | 2 minggu | — |
+| Index | Section / Item | Change | Before | After |
+|---|---|---|---|---|
+| 3.4 | Deliverables: Admin dashboard | Added | — | Dashboard admin untuk mengelola pengguna |
+| 4.2 | Price | Modified | 2,400 USD | 3,000 USD |
+| 4.1 | Timeline | Removed | 2 minggu | — |
 
+- Always include the **Index** column (next free index for additions).
 - Include the price (and currency) as a row whenever it changes, so the user sees the money impact before it lands.
 - Show every change that will be made, and nothing that won't be — the table must match the edit exactly.
 - If the user adjusts the proposal, present the revised table again before editing.
@@ -150,7 +165,8 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 | Saving the quotation document | Ask for the client name and the project name, then write `docs/quotations/YYYY-MM-DD-<client>-<project-slug>.md` as `.md` by default |
 | No answer on client/project name | Derive it from the quotation's own content (scope, prior correspondence, or source estimate) — don't block or leave a placeholder |
 | Producing a Word version | Only when explicitly requested — generate the `.docx` from the same Markdown content, don't hand-author a separate copy |
-| Changing an existing quotation | Present the changes in a table (section, change, before, after, incl. price) and get confirmation before editing |
+| Structuring the quotation | Unique hierarchical index on every section/sub-section; mirror the estimate document (1 Scope, 2 Assumptions, 3 Deliverables ↔ Breakdown with matching `3.x`, 4 Pricing) |
+| Changing an existing quotation | Present the changes in a table (index, section, change, before, after, incl. price) and get confirmation before editing |
 | Updating a Zoho Books estimate | See `references/zoho-books.md` — `get_estimate` first, then `update_estimate` with only the fields the user asked to change |
 | Creating/adding a Zoho Books line item | See `references/zoho-books.md` — use `service` item type; describe the deliverable, not man-hours, unless explicitly requested |
 | Recording a pricing variable | Save it to `.agents/contexts/writing-quotations/MEMORY.md` once confirmed by the user |
@@ -166,6 +182,7 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 - Blocking on, or repeatedly re-asking for, the client name or project name instead of falling back to a content-based value when the user doesn't answer.
 - Re-asking for a pricing variable every time instead of checking `.agents/contexts/writing-quotations/MEMORY.md` first.
 - Silently reusing a non-Indonesian language for a new quotation in the same project without it having been saved to `MEMORY.md` as this project's preference.
+- Leaving any quotation section or sub-section unindexed, duplicating an index, renumbering existing items, or letting the quotation's structure/indices drift from its source estimate document.
 - Omitting a Deliverables section, or describing deliverables as internal tasks/hours instead of outcomes the client will receive.
 - Writing the quotation in English (or any language) by default instead of Indonesian, without the user having asked for it.
 - Editing a quotation (or Zoho Books estimate) before showing the user the upcoming changes in a table and getting confirmation.
