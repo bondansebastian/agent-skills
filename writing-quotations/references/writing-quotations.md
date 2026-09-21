@@ -35,6 +35,10 @@ Price: (18 / 6) × 800 USD = 2,400 USD
 Client-facing quotation, written from the same numbers (Indonesian, the default language):
 
 ```
+Klien: <nama klien>
+Proyek: <nama proyek>
+Versi: 2026.09.21.14.35  (selalu ada; diperbarui setiap quotation diubah)
+
 1. Lingkup pekerjaan
    <deskripsi singkat pekerjaan>  (satu item saja → menjadi deskripsi section, tanpa 1.1)
 2. Asumsi
@@ -54,6 +58,7 @@ Here `3.1` and `3.2` carry the same indices as the estimate document's Breakdown
 - Sending a client the internal derivation (`AI Estimate`, `buffer multiplier`, etc.) instead of a plain-language summary.
 - Writing the quotation as prose instead of scannable bullet points.
 - Leaving sections unindexed, or using a structure/indices that don't match the source estimate document.
+- Omitting the `Versi` datetime stamp from the meta, or not refreshing it when the quotation is updated.
 - Omitting the Deliverables section, or listing internal tasks/hours instead of outcomes the client will actually receive.
 - Defaulting to English (or any other language) instead of Indonesian without the user having explicitly asked for it.
 - Confusing this quotation-writing guidance with the internal pricing-variable context in `.agents/contexts/writing-quotations/MEMORY.md`, which only tracks internal pricing variables and is never client-facing.

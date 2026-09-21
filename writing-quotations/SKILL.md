@@ -1,7 +1,7 @@
 ---
 name: writing-quotations
-description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text or document, maintaining this project's pricing-variable ledger (buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read the saved ledger in .agents/contexts/writing-quotations/MEMORY.md or ask — writing the quotation in plain business bullet points with a clear Deliverables section and a unique index on every section and sub-section that mirrors the estimate document's structure, in Indonesian by default unless the user explicitly asks for another language (remembered per project in that same context file), always asking the client name and project name fresh for every quotation rather than reusing a remembered one, always saving it as a dated Markdown file under docs/quotations/ (the same naming convention as the estimate-project skill), only producing a polished .docx version when the user explicitly asks for one, the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/quotations/ or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
-version: 1.7.1
+description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text or document, maintaining this project's pricing-variable ledger (buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read the saved ledger in .agents/contexts/writing-quotations/MEMORY.md or ask — writing the quotation in plain business bullet points with a clear Deliverables section and a unique index on every section and sub-section that mirrors the estimate document's structure, in Indonesian by default unless the user explicitly asks for another language (remembered per project in that same context file), always asking the client name and project name fresh for every quotation rather than reusing a remembered one, always saving it as a dated Markdown file under docs/quotations/ (the same naming convention as the estimate-project skill), always including a datetime-stamped Version in the quotation's meta that is refreshed on every update, only producing a polished .docx version when the user explicitly asks for one, the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/quotations/ or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
+version: 1.8.1
 ---
 
 # Writing Quotations Skill
@@ -128,6 +128,22 @@ docs/quotations/YYYY-MM-DD-<client>-<project-slug>.md
 
 ---
 
+## Quotation Meta & Version
+
+Every quotation must open with a small meta block (a table or bullet list at the top of the file) that **always includes a `Versi` (Version) field holding a datetime stamp**:
+
+```
+| Versi | 2026.09.21.14.35 |
+```
+
+- Format: `YYYY.MM.DD.HH.mm` in the user's local time, 24-hour, zero-padded (e.g. `2026.09.21.14.35`). Get the real current time (e.g. run `date`) — never guess or reuse an old value.
+- **Set it when the quotation is first written, and update it every time the agent changes the quotation** (after the user confirms the changes per the section below). Update it in the same edit as the content change, so the stamp always reflects the last modification. Don't bump it if nothing changed.
+- The version is a stamp, not a counter — replace the old value rather than appending a history.
+- If the quotation is regenerated as a `.docx`, carry the same Version value into it. When the change is also mirrored into a Zoho Books estimate, leave the Zoho fields alone unless the user asked otherwise (see `references/zoho-books.md`).
+- The Version row is not an indexed section; it sits in the meta block alongside the client and project name.
+
+---
+
 ## Confirm Changes Before Editing
 
 Before changing an existing quotation document (`docs/quotations/...`, or a `.docx` generated from it), **always present the upcoming changes to the user in a table first, and only edit after they confirm.** Never edit the quotation and describe the change afterward.
@@ -144,6 +160,7 @@ The table has one row per change, in client-facing terms:
 - Include the price (and currency) as a row whenever it changes, so the user sees the money impact before it lands.
 - Show every change that will be made, and nothing that won't be — the table must match the edit exactly.
 - If the user adjusts the proposal, present the revised table again before editing.
+- The Version stamp is refreshed automatically as part of any confirmed edit; no need to list it as a row.
 - For a brand-new quotation, present the proposed sections (Deliverables, price, etc.) in the same table form (Before shown as `—`) before writing the file.
 - The same rule applies to Zoho Books estimates — see `references/zoho-books.md`.
 
@@ -167,6 +184,7 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 | No answer on client/project name | Derive it from the quotation's own content (scope, prior correspondence, or source estimate) — don't block or leave a placeholder |
 | Producing a Word version | Only when explicitly requested — generate the `.docx` from the same Markdown content, don't hand-author a separate copy |
 | Structuring the quotation | Unique hierarchical index on every section/sub-section; mirror the estimate document (1 Scope, 2 Assumptions, 3 Deliverables ↔ Breakdown with matching `3.x`, 4 Pricing) |
+| Versioning a quotation | Always keep a `Versi` datetime stamp (`YYYY.MM.DD.HH.mm`, from `date`) in the meta block; set on creation and refresh on every update |
 | Changing an existing quotation | Present the changes in a table (index, section, change, before, after, incl. price) and get confirmation before editing |
 | Updating a Zoho Books estimate | See `references/zoho-books.md` — `get_estimate` first, then `update_estimate` with only the fields the user asked to change |
 | Creating/adding a Zoho Books line item | See `references/zoho-books.md` — use `service` item type; describe the deliverable, not man-hours, unless explicitly requested |
@@ -187,6 +205,7 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 - Leaving any quotation section or sub-section unindexed, duplicating an index, renumbering existing items, or letting the quotation's structure/indices drift from its source estimate document.
 - Omitting a Deliverables section, or describing deliverables as internal tasks/hours instead of outcomes the client will receive.
 - Writing the quotation in English (or any language) by default instead of Indonesian, without the user having asked for it.
+- Omitting the `Versi` datetime stamp from the quotation meta, or editing the quotation without refreshing it (or guessing the time instead of reading it).
 - Editing a quotation (or Zoho Books estimate) before showing the user the upcoming changes in a table and getting confirmation.
 - Overwriting or reformatting unrelated sections of a Zoho Books estimate when the user only asked to change one part of it — see `references/zoho-books.md`.
 - Using a `goods`/inventory item type for a Zoho Books line item instead of `service`, or exposing man-hour breakdowns by default when the user never asked for them.
