@@ -1,7 +1,7 @@
 ---
 name: estimate-project
 description: "Use when creating, naming, renaming, or filling in the metadata table of a project estimate document under docs/estimates/ — covers date-prefixed filenames keyed to the Date of assessment field, the required AI Estimate metadata row (never a separate Estimate or Human Estimate row), and the required Scope/Assumptions/Breakdown document structure. Always asks the client name fresh for every new estimate rather than remembering it. Always trigger when the user asks to estimate a project, size up a task, scope out how long something will take, or write/draft/create an estimate document — even if the request doesn't mention filenames, metadata, or docs/estimates/ directly. For turning the estimate into a client-facing price or quotation, tracking pricing variables, or Zoho Books estimates, see the writing-quotations skill instead."
-version: 1.2.0
+version: 1.3.0
 ---
 
 # Estimate Project Skill
@@ -50,6 +50,26 @@ Don't skip or reorder sections. A document missing an Assumptions section is inc
 
 ---
 
+## Confirm Changes Before Editing
+
+Before changing an existing estimate document (adding, removing, or resizing scope, breakdown items, assumptions, or the `AI Estimate`), **always present the upcoming changes to the user in a table first, and only edit the document after they confirm.** Never edit the estimate and describe the change afterward.
+
+The table has one row per change:
+
+| Section / Item | Change | Before | After | Effort change |
+|---|---|---|---|---|
+| Breakdown: Login page | Modified | 1 hour | 1.5 hours | +30 minutes |
+| Breakdown: Audit log | Added | — | 45 minutes | +45 minutes |
+| Assumptions: SSO | Removed | Assumes SSO is out of scope | — | — |
+| **Total AI Estimate** | | 3 hours | 4 hours 15 minutes | **+1 hour 15 minutes** |
+
+- Always include the **Effort change** column (signed, e.g. `+30 minutes`, `-1 hour`; `—` for changes that don't affect time) and a final row with the total `AI Estimate` before and after.
+- Show every change that will be made, and nothing that won't be — the table must match the edit exactly.
+- If the user adjusts the proposal, present the revised table again before editing.
+- If the estimate is being created from scratch, present the proposed breakdown in the same table form (Before shown as `—`) before writing the file.
+
+---
+
 ## Assumptions
 
 Every estimate document must state the assumptions held while writing the estimate — the conditions the estimate depends on that, if false, would change the number. Put these in an **Assumptions** section immediately after Scope, as a bullet list.
@@ -74,6 +94,7 @@ Every estimate document's metadata table must report an **AI Estimate** in place
 |---|---|
 | Creating a new estimate | Ask for the client name fresh (never remembered); write to `docs/estimates/YYYY-MM-DD-<client>-<slug>.md` using today's `Date of assessment` |
 | `Date of assessment` changes | `git mv` the file (and its linked folder, if any) to the new date |
+| Changing an existing estimate | Present the changes in a table (with Effort change column and total AI Estimate before/after) and get confirmation before editing |
 | Filling in the metadata table | Include one `AI Estimate` row; omit `Estimate` and `Human Estimate` |
 | Writing the document body | Follow Metadata → Scope → Assumptions → Breakdown → Pricing (if quoted), in that order |
 | Stating assumptions | List falsifiable conditions the estimate depends on, or note none exist |
@@ -87,4 +108,5 @@ Every estimate document's metadata table must report an **AI Estimate** in place
 - Omitting the Assumptions section, or burying assumptions inside the breakdown instead of stating them up front.
 - Writing assumptions as vague hedges instead of falsifiable statements.
 - Writing a client-facing price or quotation directly in this skill instead of loading **writing-quotations** for the pricing formula and quotation style.
+- Editing the estimate document before showing the user the upcoming changes in a table, or leaving out the effort change / total `AI Estimate` delta.
 - Remembering or reusing a client name across estimates instead of asking fresh every time.

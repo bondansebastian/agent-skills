@@ -6,6 +6,7 @@ When updating an existing estimate in Zoho Books (e.g. via `update_estimate`), *
 
 - First fetch the current estimate (`get_estimate`) and diff the user's request against it to identify exactly which fields/line items/sections are in scope.
 - Only include the fields the user asked to change in the update payload. Do not "clean up," reformat, reprice, re-word, or otherwise touch line items, terms, notes, or metadata the user didn't mention — even if they look inconsistent with the requested change.
+- **Before calling `create_estimate` or `update_estimate`, present the upcoming changes to the user in a table** (line item / section, change type, before, after, including price and totals) and wait for confirmation. The table must match the payload exactly.
 - If the requested change has knock-on effects elsewhere in the document (e.g. a line-item price change that should shift the total), surface that to the user and get confirmation before touching the additional section — don't silently cascade the edit.
 - If it's unclear which section a request refers to, ask rather than guessing and editing broadly.
 
@@ -22,6 +23,7 @@ These apply whenever a line item is created or added, whether via `create_estima
 | Situation | Action |
 |---|---|
 | Updating a Zoho Books estimate | `get_estimate` first, then `update_estimate` with only the fields the user asked to change — leave everything else untouched |
+| Before any create/update call | Show the changes in a table (item, change, before, after, totals) and get confirmation |
 | Creating or adding a line item | Use `service` item type; describe the deliverable, not man-hours, unless the user explicitly asks for hour-level detail |
 
 ## Common Mistakes

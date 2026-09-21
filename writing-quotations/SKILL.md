@@ -1,7 +1,7 @@
 ---
 name: writing-quotations
 description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text or document, maintaining this project's pricing-variable ledger (buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read the saved ledger in .agents/contexts/writing-quotations/MEMORY.md or ask — writing the quotation in plain business bullet points with a clear Deliverables section, in Indonesian by default unless the user explicitly asks for another language (remembered per project in that same context file), always asking the client name and project name fresh for every quotation rather than reusing a remembered one, always saving it as a dated Markdown file under docs/quotations/ (the same naming convention as the estimate-project skill), only producing a polished .docx version when the user explicitly asks for one, the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/quotations/ or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
-version: 1.5.0
+version: 1.6.0
 ---
 
 # Writing Quotations Skill
@@ -113,6 +113,26 @@ docs/quotations/YYYY-MM-DD-<client>-<project-slug>.md
 
 ---
 
+## Confirm Changes Before Editing
+
+Before changing an existing quotation document (`docs/quotations/...`, or a `.docx` generated from it), **always present the upcoming changes to the user in a table first, and only edit after they confirm.** Never edit the quotation and describe the change afterward.
+
+The table has one row per change, in client-facing terms:
+
+| Section / Item | Change | Before | After |
+|---|---|---|---|
+| Deliverables: Admin dashboard | Added | — | Dashboard admin untuk mengelola pengguna |
+| Price | Modified | 2,400 USD | 3,000 USD |
+| Timeline | Removed | 2 minggu | — |
+
+- Include the price (and currency) as a row whenever it changes, so the user sees the money impact before it lands.
+- Show every change that will be made, and nothing that won't be — the table must match the edit exactly.
+- If the user adjusts the proposal, present the revised table again before editing.
+- For a brand-new quotation, present the proposed sections (Deliverables, price, etc.) in the same table form (Before shown as `—`) before writing the file.
+- The same rule applies to Zoho Books estimates — see `references/zoho-books.md`.
+
+---
+
 ## Zoho Books Estimates
 
 Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `update_estimate`) has its own scoped-editing and line-item rules — read `references/zoho-books.md` first. This covers touching only the sections the user asked to change, always using `service`-type line items, and not exposing man-hour breakdowns unless explicitly requested.
@@ -130,6 +150,7 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 | Saving the quotation document | Ask for the client name and the project name, then write `docs/quotations/YYYY-MM-DD-<client>-<project-slug>.md` as `.md` by default |
 | No answer on client/project name | Derive it from the quotation's own content (scope, prior correspondence, or source estimate) — don't block or leave a placeholder |
 | Producing a Word version | Only when explicitly requested — generate the `.docx` from the same Markdown content, don't hand-author a separate copy |
+| Changing an existing quotation | Present the changes in a table (section, change, before, after, incl. price) and get confirmation before editing |
 | Updating a Zoho Books estimate | See `references/zoho-books.md` — `get_estimate` first, then `update_estimate` with only the fields the user asked to change |
 | Creating/adding a Zoho Books line item | See `references/zoho-books.md` — use `service` item type; describe the deliverable, not man-hours, unless explicitly requested |
 | Recording a pricing variable | Save it to `.agents/contexts/writing-quotations/MEMORY.md` once confirmed by the user |
@@ -147,5 +168,6 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 - Silently reusing a non-Indonesian language for a new quotation in the same project without it having been saved to `MEMORY.md` as this project's preference.
 - Omitting a Deliverables section, or describing deliverables as internal tasks/hours instead of outcomes the client will receive.
 - Writing the quotation in English (or any language) by default instead of Indonesian, without the user having asked for it.
+- Editing a quotation (or Zoho Books estimate) before showing the user the upcoming changes in a table and getting confirmation.
 - Overwriting or reformatting unrelated sections of a Zoho Books estimate when the user only asked to change one part of it — see `references/zoho-books.md`.
 - Using a `goods`/inventory item type for a Zoho Books line item instead of `service`, or exposing man-hour breakdowns by default when the user never asked for them.
