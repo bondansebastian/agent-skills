@@ -1,7 +1,7 @@
 ---
 name: estimate-project
 description: "Use when creating, naming, renaming, or filling in the metadata table of a project estimate document under docs/estimates/ — covers date-prefixed filenames keyed to the Date of assessment field, the required AI Estimate metadata row (never a separate Estimate or Human Estimate row), and the required Scope/Assumptions/Breakdown document structure with a unique index on every section and sub-section (mirrored by the client quotation). Always asks the client name fresh for every new estimate rather than remembering it. Always trigger when the user asks to estimate a project, size up a task, scope out how long something will take, or write/draft/create an estimate document — even if the request doesn't mention filenames, metadata, or docs/estimates/ directly. For turning the estimate into a client-facing price or quotation, tracking pricing variables, or Zoho Books estimates, see the writing-quotations skill instead."
-version: 1.4.1
+version: 1.4.3
 ---
 
 # Estimate Project Skill
@@ -58,6 +58,19 @@ Don't skip or reorder sections. A document missing an Assumptions section is inc
 
 ---
 
+## Refresh Before Working — Latest Version Is the Source of Truth
+
+Before making a new estimate for an existing project, or writing anything into an estimate document, **re-read the current estimate file from disk first** (and the matching quotation under `docs/quotations/`, if one exists). Never work from an earlier read, from conversation memory, or from a copy you wrote earlier in the session — the user or another agent may have edited the file since.
+
+- Treat the **latest version on disk as the source of truth.** If it differs from what you remember or what the user described, the file wins; mention the difference instead of silently overwriting it.
+- Compare the file's metadata `Version`/last-modified state (and the quotation's `Versi` stamp, if present) when deciding what is current; if the estimate and quotation disagree, flag it and tell the user which document needs the matching change.
+- Build the confirmation table below from the freshly read content, so the Before column reflects what is actually in the file.
+- Re-read again if time passed or other edits may have happened between confirmation and writing.
+
+**Explicit refresh command:** when the user says "refresh the data" — or any similar phrasing with the same intent (e.g. "reload the docs", "sync with the file", "re-read the latest", "I edited the file, update your context") — treat it as an instruction to re-read the estimate document(s) in context (and the matching quotation) from disk right now, discard whatever earlier copy is held in context, and treat the latest physical document as the truth from then on. Confirm briefly what was refreshed and note any differences from the earlier copy; don't make edits as part of the refresh unless the user also asked for them.
+
+---
+
 ## Confirm Changes Before Editing
 
 Before changing an existing estimate document (adding, removing, or resizing scope, breakdown items, assumptions, or the `AI Estimate`), **always present the upcoming changes to the user in a table first, and only edit the document after they confirm.** Never edit the estimate and describe the change afterward.
@@ -102,6 +115,8 @@ Every estimate document's metadata table must report an **AI Estimate** in place
 |---|---|
 | Creating a new estimate | Ask for the client name fresh (never remembered); write to `docs/estimates/YYYY-MM-DD-<client>-<slug>.md` using today's `Date of assessment` |
 | `Date of assessment` changes | `git mv` the file (and its linked folder, if any) to the new date |
+| User says "refresh the data" (or similar) | Re-read the estimate/quotation documents in context from disk, drop the earlier copy, treat the latest physical file as the truth; report differences, don't edit |
+| Before a new estimate or any write to the document | Re-read the latest file (and matching quotation) from disk; the latest version is the source of truth |
 | Changing an existing estimate | Present the changes in a table (with Effort change column and total AI Estimate before/after) and get confirmation before editing |
 | Filling in the metadata table | Include one `AI Estimate` row; omit `Estimate` and `Human Estimate` |
 | Writing the document body | Follow Metadata → 1 Scope → 2 Assumptions → 3 Breakdown → 4 Pricing (if quoted), in that order, with a unique index on every section and sub-section |
@@ -111,6 +126,8 @@ Every estimate document's metadata table must report an **AI Estimate** in place
 
 ## Common Mistakes
 
+- Ignoring a "refresh the data" (or similar) request and continuing from the copy already in context instead of re-reading the documents from disk.
+- Editing or re-estimating from a stale earlier read or from memory instead of re-reading the latest file first, or overriding newer on-disk content with an older copy.
 - Dating the filename by creation or approval date instead of `Date of assessment`.
 - Leaving a stale date in the filename after the assessment is revised.
 - Including both an `Estimate` row and an `AI Estimate` row, or adding a `Human Estimate` row.

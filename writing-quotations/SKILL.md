@@ -1,7 +1,7 @@
 ---
 name: writing-quotations
 description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text or document, maintaining this project's pricing-variable ledger (buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read the saved ledger in .agents/contexts/writing-quotations/MEMORY.md or ask — writing the quotation in plain business bullet points with a clear Deliverables section and a unique index on every section and sub-section that mirrors the estimate document's structure, in Indonesian by default unless the user explicitly asks for another language (remembered per project in that same context file), always asking the client name and project name fresh for every quotation rather than reusing a remembered one, always saving it as a dated Markdown file under docs/quotations/ (the same naming convention as the estimate-project skill), always including a datetime-stamped Version in the quotation's meta that is refreshed on every update, only producing a polished .docx version when the user explicitly asks for one, the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/quotations/ or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
-version: 1.8.1
+version: 1.8.3
 ---
 
 # Writing Quotations Skill
@@ -128,6 +128,19 @@ docs/quotations/YYYY-MM-DD-<client>-<project-slug>.md
 
 ---
 
+## Refresh Before Working — Latest Version Is the Source of Truth
+
+Before writing a new quotation or writing into an existing one, **re-read the current quotation file from disk first** (`docs/quotations/...`) and the estimate document it is priced from (`docs/estimates/...`). Never work from an earlier read, from conversation memory, or from a copy you wrote earlier in the session — the user or another agent may have edited either file since.
+
+- Treat the **latest version on disk as the source of truth.** If it differs from what you remember or what the user described, the file wins; mention the difference instead of silently overwriting it.
+- Use the quotation's `Versi` stamp (below) to judge which copy is newest; price from the estimate's current `AI Estimate`, not a remembered figure. If the estimate and quotation have drifted apart, flag it and say which needs the matching change.
+- Build the confirmation table from the freshly read content, so the Before column reflects what is actually in the file.
+- Re-read again if time passed or other edits may have happened between confirmation and writing.
+
+**Explicit refresh command:** when the user says "refresh the data" — or any similar phrasing with the same intent (e.g. "reload the docs", "sync with the file", "re-read the latest", "I edited the file, update your context") — treat it as an instruction to re-read the quotation document(s) in context (and the source estimate) from disk right now, discard whatever earlier copy is held in context, and treat the latest physical document as the truth from then on. Confirm briefly what was refreshed and note any differences from the earlier copy; don't make edits as part of the refresh unless the user also asked for them.
+
+---
+
 ## Quotation Meta & Version
 
 Every quotation must open with a small meta block (a table or bullet list at the top of the file) that **always includes a `Versi` (Version) field holding a datetime stamp**:
@@ -184,6 +197,8 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 | No answer on client/project name | Derive it from the quotation's own content (scope, prior correspondence, or source estimate) — don't block or leave a placeholder |
 | Producing a Word version | Only when explicitly requested — generate the `.docx` from the same Markdown content, don't hand-author a separate copy |
 | Structuring the quotation | Unique hierarchical index on every section/sub-section; mirror the estimate document (1 Scope, 2 Assumptions, 3 Deliverables ↔ Breakdown with matching `3.x`, 4 Pricing) |
+| User says "refresh the data" (or similar) | Re-read the quotation/estimate documents in context from disk, drop the earlier copy, treat the latest physical file as the truth; report differences, don't edit |
+| Before a new quotation or any write to the document | Re-read the latest quotation and its source estimate from disk; the latest version is the source of truth |
 | Versioning a quotation | Always keep a `Versi` datetime stamp (`YYYY.MM.DD.HH.mm`, from `date`) in the meta block; set on creation and refresh on every update |
 | Changing an existing quotation | Present the changes in a table (index, section, change, before, after, incl. price) and get confirmation before editing |
 | Updating a Zoho Books estimate | See `references/zoho-books.md` — `get_estimate` first, then `update_estimate` with only the fields the user asked to change |
@@ -192,6 +207,8 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 
 ## Common Mistakes
 
+- Ignoring a "refresh the data" (or similar) request and continuing from the copy already in context instead of re-reading the documents from disk.
+- Writing or pricing from a stale earlier read or from memory instead of re-reading the latest quotation and estimate files first, or overriding newer on-disk content with an older copy.
 - Writing a hardcoded price without showing the `AI Estimate` → `Quoted time` → `base man-day rate` derivation.
 - Assuming, inventing, or silently defaulting `buffer multiplier`, `man-day hours`, `base man-day rate`, or `currency` instead of reading them from `MEMORY.md` or asking the user — including quietly using the default values without confirming them, or assuming `$`/USD by default.
 - Sending a client the internal derivation or jargon (`AI Estimate`, `buffer multiplier`, etc.) instead of a plain-language, bulleted quotation — see `references/writing-quotations.md`.
