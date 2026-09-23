@@ -15,8 +15,14 @@ A **quotation** is the client-facing pricing communication itself — the text a
   - `Quoted time` — present as a plain timeline (e.g. "estimated turnaround" / "estimasi waktu pengerjaan").
   - `base man-day rate` — "daily rate" or "day rate" if a rate needs to be shown at all.
   - `Price` — "Investment" ("Investasi") or "Total" reads better to a client than an internal derivation label.
-- **Always include a Deliverables section.** State the concrete things the client will receive — features shipped, documents handed over, environments configured — as outcomes, not as the internal task/hour breakdown from the estimate document's Breakdown section. This is what tells the client exactly what they're paying for, separate from how long it takes or what it costs.
-- **Index every section and sub-section, mirroring the estimate document.** Number them hierarchically (`1`, `1.1`, `1.1.1`) at the start of each heading/bullet, using the same top-level structure as the estimate: `1` Lingkup, `2` Asumsi, `3` Deliverables (each `3.x` reuses the index of the estimate Breakdown item it comes from), `4` Estimasi waktu & Investasi. Indices are unique and stable — never renumber or reuse them. **A section with only one sub-item has no sub-index:** that item is the section's description. When more bullets are needed later, restructure the section (existing text becomes `x.1`, new item `x.2`), in step with the estimate document.
+- **Always include a Deliverables section (Section 2).** State the concrete things the client will receive — features shipped, documents handed over, environments configured — as outcomes, not as the internal task/hour breakdown from the estimate document's Breakdown section. This is what tells the client exactly what they're paying for, separate from how long it takes or what it costs.
+- **Index every section and sub-section, following this skill's fixed 4-section structure.** Number them hierarchically (`1`, `1.1`, `1.1.1`) at the start of each heading/bullet:
+  - `1` **Lingkup Pekerjaan** — plain-language scope description.
+  - `2` **Deliverables** — grouped by feature area, one group per `2.x` heading. Each `2.x` heading carries an effort figure and a back-reference to the estimate Breakdown item(s) it summarizes (e.g. `— (estimasi dari 3.1, 3.2)`); one `2.x` group can summarize several estimate items at once, so this is a back-reference, not a 1:1 index reuse. Individual deliverables under a group are `2.x.1`, `2.x.2`, ....
+  - `3` **Catatan** — always exactly two fixed subsections: `3.1 Keputusan Teknis` (technical approach per `2.x` deliverable group) and `3.2 Perlu Konfirmasi` (open questions, indexed `3.2.1`, `3.2.2`, ...). There is no standalone Asumsi section — assumptions live inside `3.1`, attached to the deliverable group they support.
+  - `4` **Estimasi Waktu Pengerjaan & Investasi** — `4.1` a single combined table of total time + total price; `4.2`+ "Opsi Tambahan" (optional add-ons, each with its own description, before/after comparison table, and incremental time/price); final `4.x` "Catatan Estimasi" (exclusions and caveats).
+  
+  Indices are unique and stable — never renumber or reuse them. **A section with only one sub-item has no sub-index:** that item is the section's description. When more bullets are needed later, restructure the section (existing text becomes `x.1`, new item `x.2`).
 - **Show outputs, not derivation.** The full `AI Estimate → Quoted time → Price` derivation from the Pricing Method belongs in the estimate document's audit trail — it is not what goes into the client-facing quotation.
 
 ## Example
@@ -39,25 +45,36 @@ Klien: <nama klien>
 Proyek: <nama proyek>
 Versi: 2026.09.21.14.35  (selalu ada; diperbarui setiap quotation diubah)
 
-1. Lingkup pekerjaan
+1. Lingkup Pekerjaan
    <deskripsi singkat pekerjaan>  (satu item saja → menjadi deskripsi section, tanpa 1.1)
-2. Asumsi
-   <kondisi yang menjadi dasar penawaran>  (satu item saja → tanpa 2.1)
-3. Deliverables
-   - 3.1 <hasil/fitur konkret #1 yang akan diterima klien>
-   - 3.2 <hasil/fitur konkret #2 yang akan diterima klien>
-4. Estimasi waktu & investasi
-   - 4.1 Estimasi waktu pengerjaan: ~3 hari kerja
-   - 4.2 Investasi: 2.400.000 IDR
+
+2. Deliverables
+   Setelah proyek ini selesai, sistem akan memiliki:
+   2.1 Login & manajemen pengguna (~2 hari kerja) — (estimasi dari 3.1 pada dokumen estimasi)
+       2.1.1 Halaman login dengan email & kata sandi
+       2.1.2 Reset kata sandi via email
+
+3. Catatan
+   3.1 Keputusan Teknis
+       3.1.1 (terkait 2.1) Autentikasi dibangun di atas middleware auth yang sudah ada, tanpa
+             mengubah alurnya, untuk menjaga kompatibilitas dengan sistem berjalan.
+   3.2 Perlu Konfirmasi
+       3.2.1 Apakah reset kata sandi perlu didukung untuk akun yang login via SSO?
+
+4. Estimasi Waktu Pengerjaan & Investasi
+   4.1 Estimasi waktu: ~3 hari kerja | Investasi: 2.400.000 IDR
 ```
 
-Here `3.1` and `3.2` carry the same indices as the estimate document's Breakdown items they come from.
+`2.1` here summarizes estimate Breakdown item `3.1` — a back-reference, not the same index reused. Note there is no standalone "Asumsi" section; the assumption about the existing auth middleware sits inside `3.1 Keputusan Teknis` instead, tied to the `2.1` deliverable group it supports.
 
 ## Common Mistakes
 
 - Sending a client the internal derivation (`AI Estimate`, `buffer multiplier`, etc.) instead of a plain-language summary.
 - Writing the quotation as prose instead of scannable bullet points.
-- Leaving sections unindexed, or using a structure/indices that don't match the source estimate document.
+- Leaving sections unindexed, or using indices that don't follow the fixed 4-section structure.
+- Reintroducing a standalone "Asumsi" section instead of folding assumptions into `3.1 Keputusan Teknis`, attached to the deliverable group they support.
+- Numbering Deliverables at index `3` instead of `2`, or reusing an estimate Breakdown item's index directly on a `2.x` group instead of writing it as a back-reference (a `2.x` group can summarize several Breakdown items at once).
+- Merging `3.1 Keputusan Teknis` and `3.2 Perlu Konfirmasi` into one subsection, or omitting either one.
 - Omitting the `Versi` datetime stamp from the meta, or not refreshing it when the quotation is updated.
 - Omitting the Deliverables section, or listing internal tasks/hours instead of outcomes the client will actually receive.
 - Defaulting to English (or any other language) instead of Indonesian without the user having explicitly asked for it.

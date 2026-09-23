@@ -1,7 +1,7 @@
 ---
 name: writing-quotations
-description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text or document, maintaining this project's pricing-variable ledger (buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read the saved ledger in .agents/contexts/writing-quotations/MEMORY.md or ask — writing the quotation in plain business bullet points with a clear Deliverables section and a unique index on every section and sub-section that mirrors the estimate document's structure, in Indonesian by default unless the user explicitly asks for another language (remembered per project in that same context file), always asking the client name and project name fresh for every quotation rather than reusing a remembered one, always saving it as a dated Markdown file under docs/quotations/ (the same naming convention as the estimate-project skill), always including a datetime-stamped Version in the quotation's meta that is refreshed on every update, only producing a polished .docx version when the user explicitly asks for one, the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/quotations/ or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
-version: 1.8.3
+description: "Use when computing a client-facing price/quotation from an AI Estimate, writing the actual client-facing quotation text or document, maintaining this project's pricing-variable ledger (buffer multiplier, man-day hours, base man-day rate, and currency), or creating/updating an estimate in Zoho Books. Covers the fully-variablized pricing formula — never assume $ or any other value, always read the saved ledger in .agents/contexts/writing-quotations/MEMORY.md or ask — writing the quotation in plain business bullet points with a clear Deliverables section and a unique index on every section and sub-section, following this skill's fixed 4-section structure (Lingkup Pekerjaan, Deliverables, Catatan, Estimasi Waktu & Investasi) traceable back to the estimate document's Breakdown items via back-references, in Indonesian by default unless the user explicitly asks for another language (remembered per project in that same context file), always asking the client name and project name fresh for every quotation rather than reusing a remembered one, always saving it as a dated Markdown file under docs/quotations/ (the same naming convention as the estimate-project skill), always including a datetime-stamped Version in the quotation's meta that is refreshed on every update, only producing a polished .docx version when the user explicitly asks for one, the rule to only touch the sections the user asked about when editing a Zoho Books estimate, and always using service-type Zoho Books line items without exposing man-hour breakdowns unless explicitly requested. Always trigger when the user asks to price, quote, or create a client-facing quotation, or to create/update a Zoho Books estimate — even if they don't mention docs/quotations/ or Zoho Books by name. For sizing up the underlying work and writing the AI Estimate itself, see the estimate-project skill instead."
+version: 1.9.0
 ---
 
 # Writing Quotations Skill
@@ -90,22 +90,43 @@ This derivation is the internal audit trail for the estimate document — it is 
 
 The quotation is the pricing text a client actually reads — not to be confused with this skill's internal pricing-variable context. Read `references/writing-quotations.md` before writing or editing any client-facing quotation: lead with bullet points and plain business language, not the internal derivation or technical terms.
 
-**Every quotation section and sub-section carries a unique index, and the quotation mirrors the structure of its source estimate document as closely as possible** (see the **estimate-project** skill's Section Indexing):
+**Every quotation section and sub-section carries a unique index.** The quotation has its own fixed four-section structure — it does not mirror the estimate document index-for-index — but Section 2 stays traceable back to the estimate's Breakdown items via explicit back-references (see below).
 
-| Index | Estimate document | Quotation |
-|---|---|---|
-| `1` | Scope | Lingkup pekerjaan |
-| `2` | Assumptions | Asumsi |
-| `3` | Breakdown (tasks, with hours) | Deliverables (outcomes, no hours) — `3.x` reuses the index of the breakdown item it comes from |
-| `4` | Pricing (derivation) | Estimasi waktu & Investasi — `4.1` timeline, `4.2` price |
+### Section 1 — Lingkup Pekerjaan (Scope)
+
+Plain-language description of what's being built/delivered. Follows the single sub-item rule like every section: stays as one paragraph under index `1` until a second distinct point is needed, at which point it splits into `1.1`, `1.2`, .... A sub-item can itself carry further-nested clarifying notes when needed (e.g. `1.3` with `1.3.1`/`1.3.2` distinguishing two different meanings of an ambiguous term used in the scope).
+
+### Section 2 — Deliverables
+
+Opens with the line "Setelah proyek ini selesai, sistem akan memiliki:" (or the equivalent in the quotation's language). Deliverables are grouped by feature area, one group per `2.x` heading. Each group heading:
+
+- carries an estimated effort figure in parentheses, e.g. `(~14,6 hari kerja)`
+- references back, in parentheses, to the specific item indices in the source estimate document's Breakdown that this group summarizes, e.g. `(estimasi dari 3.1, 3.2 pada dokumen estimasi)` — so the two documents stay traceable to each other even though one `2.x` group can summarize several estimate Breakdown items at once
+
+Under each group heading, individual deliverable bullets are indexed `2.x.1`, `2.x.2`, etc., stated as outcomes in plain client-facing language (no hours, no internal task names). Nesting goes arbitrarily deep when a deliverable bullet itself needs enumerated sub-points (`2.x.y.1`, `2.x.y.1.1`, `2.x.y.1.2`, ...) — depth is driven by content, never capped at a fixed level.
+
+### Section 3 — Catatan (Notes)
+
+A new section with no equivalent in the source estimate document. Always has exactly these two fixed subsections, in this order:
+
+- **`3.1 Keputusan Teknis`** (Technical Decisions) — for each deliverable group from Section 2, a written explanation of the technical approach chosen to implement it, referencing back to that group's `2.x` index. Documents *how* each deliverable will be built, for transparency/audit — more detailed than the Deliverables section itself.
+- **`3.2 Perlu Konfirmasi`** (Needs Confirmation) — an explicit list of open questions the client still needs to answer before or during the work, each indexed (`3.2.1`, `3.2.2`, ...). This replaces relying on chat history for open questions — they live in the document itself.
+
+**There is deliberately no standalone "Asumsi" (Assumptions) section anymore.** Assumptions and design decisions are captured inside `3.1 Keputusan Teknis` instead, attached to the specific deliverable group they support rather than listed generically up front.
+
+### Section 4 — Estimasi Waktu Pengerjaan & Investasi (Time & Investment)
+
+- `4.1` — a single combined table showing total estimated working days **and** total price together (not split into a separate timeline index and a separate price index).
+- `4.2`, `4.3`, `4.4`, ... — **"Opsi Tambahan"** (optional add-ons): each optional/extra scope item gets its own indexed subsection with (a) a prose description of what the option adds, (b) a before/after comparison table contrasting behavior without vs. with the option, and (c) the option's own incremental time and price figures, shown separately from the base estimate in `4.1`. These are priced items the client can accept or decline independently of the base quotation.
+- final `4.x` (the next free index after the options) — **"Catatan Estimasi"** (Estimate Notes): a plain bullet list of exclusions and caveats (e.g. "tidak termasuk biaya hosting/infrastruktur", "tidak termasuk entri data awal").
+
+### Indexing Rules (apply across all four sections)
 
 - Use hierarchical decimal indices (`1`, `1.1`, `1.1.1`), written at the start of each heading/bullet, so any line can be cited by index alone. No duplicate indices, and no unnumbered sub-items except under the single sub-item rule below.
-- **Single sub-item rule:** a section with only one sub-item gets no sub-index — the sub-item's text *is* the section's description (e.g. `1 Lingkup pekerjaan` followed by the one sentence, not `1.1`). Sub-indices exist only when a section has two or more sub-items. When more bullet points are needed later, the agent **must restructure the section**: the existing description becomes `x.1` and the new item `x.2`, matching the same change in the estimate document. Apply the rule identically in the estimate and the quotation so they stay aligned.
+- **Single sub-item rule:** a section or sub-section with only one sub-item gets no sub-index — its text *is* the parent's own description (e.g. `1 Lingkup pekerjaan` followed by the one sentence, not `1.1`). Sub-indices exist only once a second item is added, at which point the agent **must restructure**: the existing description becomes `x.1` and the new item `x.2`.
 - Indices are stable: new items take the next free index at that level; removed items' indices are never reused or renumbered.
-- Reword for the client (outcomes, plain language, no hours), but keep the same order and index. If an estimate item has no client-visible outcome, keep its index unused in the quotation rather than renumbering. If the estimate has no section for something the quotation needs, add it to the estimate first so the two stay aligned.
-- Whenever the estimate's structure or items change (or the quotation's), tell the user the other document needs the matching change.
-
-Every quotation must also state **Deliverables** — the concrete things the client will receive (features shipped, documents handed over, environments set up), stated as outcomes, not as the internal task breakdown from the estimate document. A client reading the quotation should know exactly what they're getting for the price, not just how long it takes.
+- Reword everything for the client (outcomes, plain language, no hours anywhere in Sections 1–3 — time and price figures live only in Section 4).
+- Whenever the estimate's Breakdown changes in a way that affects a `2.x` group's back-reference, tell the user the quotation needs the matching change (and vice versa).
 
 **Write the quotation in Indonesian by default.** Check this skill's `MEMORY.md` (see Where This Skill Stores Context above) for a saved language preference for this project first; if there isn't one, default to Indonesian. Only use another language when the user explicitly asks for it (e.g. the client is international, or the user says to write it in English) — and if they indicate this should apply to future quotations in this project too, save that preference to `MEMORY.md`. Don't infer the language from the client's name or domain.
 
@@ -165,9 +186,9 @@ The table has one row per change, in client-facing terms:
 
 | Index | Section / Item | Change | Before | After |
 |---|---|---|---|---|
-| 3.4 | Deliverables: Admin dashboard | Added | — | Dashboard admin untuk mengelola pengguna |
-| 4.2 | Price | Modified | 2,400 USD | 3,000 USD |
-| 4.1 | Timeline | Removed | 2 minggu | — |
+| 2.2.1 | Deliverables: Admin dashboard | Added | — | Dashboard admin untuk mengelola pengguna |
+| 4.1 | Estimasi waktu & Investasi | Modified | ~2 minggu / 2.400.000 IDR | ~2,5 minggu / 3.000.000 IDR |
+| 4.2 | Opsi Tambahan: Integrasi pembayaran | Removed | — | — |
 
 - Always include the **Index** column (next free index for additions).
 - Include the price (and currency) as a row whenever it changes, so the user sees the money impact before it lands.
@@ -196,7 +217,7 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 | Saving the quotation document | Ask for the client name and the project name, then write `docs/quotations/YYYY-MM-DD-<client>-<project-slug>.md` as `.md` by default |
 | No answer on client/project name | Derive it from the quotation's own content (scope, prior correspondence, or source estimate) — don't block or leave a placeholder |
 | Producing a Word version | Only when explicitly requested — generate the `.docx` from the same Markdown content, don't hand-author a separate copy |
-| Structuring the quotation | Unique hierarchical index on every section/sub-section; mirror the estimate document (1 Scope, 2 Assumptions, 3 Deliverables ↔ Breakdown with matching `3.x`, 4 Pricing) |
+| Structuring the quotation | Fixed 4-section structure with a unique hierarchical index on every section/sub-section: `1` Lingkup Pekerjaan, `2` Deliverables (grouped `2.x` headings back-referencing the estimate's Breakdown items), `3` Catatan (`3.1` Keputusan Teknis, `3.2` Perlu Konfirmasi — no standalone Asumsi section), `4` Estimasi Waktu & Investasi (`4.1` combined time+price, `4.2+` Opsi Tambahan, final `4.x` Catatan Estimasi) |
 | User says "refresh the data" (or similar) | Re-read the quotation/estimate documents in context from disk, drop the earlier copy, treat the latest physical file as the truth; report differences, don't edit |
 | Before a new quotation or any write to the document | Re-read the latest quotation and its source estimate from disk; the latest version is the source of truth |
 | Versioning a quotation | Always keep a `Versi` datetime stamp (`YYYY.MM.DD.HH.mm`, from `date`) in the meta block; set on creation and refresh on every update |
@@ -219,7 +240,10 @@ Creating or updating an estimate in Zoho Books (e.g. via `create_estimate` or `u
 - Re-asking for a pricing variable every time instead of checking `.agents/contexts/writing-quotations/MEMORY.md` first.
 - Silently reusing a non-Indonesian language for a new quotation in the same project without it having been saved to `MEMORY.md` as this project's preference.
 - Giving a section a lone sub-item (`1.1` with no `1.2`) instead of making it the section description, or adding a second item without restructuring the section.
-- Leaving any quotation section or sub-section unindexed, duplicating an index, renumbering existing items, or letting the quotation's structure/indices drift from its source estimate document.
+- Leaving any quotation section or sub-section unindexed, duplicating an index, or renumbering existing items.
+- Reintroducing a standalone "Asumsi" (Assumptions) section — assumptions belong inside `3.1 Keputusan Teknis`, attached to the deliverable group they support, not listed generically up front.
+- Numbering Deliverables at index `3` (the old mapping) instead of `2`, or omitting a `2.x` group's back-reference to the estimate Breakdown items it summarizes.
+- Collapsing `3.1 Keputusan Teknis` and `3.2 Perlu Konfirmasi` back into a single "Catatan"/"Asumsi" section instead of keeping both fixed subsections.
 - Omitting a Deliverables section, or describing deliverables as internal tasks/hours instead of outcomes the client will receive.
 - Writing the quotation in English (or any language) by default instead of Indonesian, without the user having asked for it.
 - Omitting the `Versi` datetime stamp from the quotation meta, or editing the quotation without refreshing it (or guessing the time instead of reading it).
