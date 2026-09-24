@@ -19,10 +19,11 @@ A **quotation** is the client-facing pricing communication itself — the text a
 - **Index every section and sub-section, following this skill's fixed 4-section structure.** Number them hierarchically (`1`, `1.1`, `1.1.1`) at the start of each heading/bullet:
   - `1` **Lingkup Pekerjaan** — plain-language scope description.
   - `2` **Deliverables** — grouped by feature area, one group per `2.x` heading. Each `2.x` heading carries an effort figure and a back-reference to the estimate Breakdown item(s) it summarizes (e.g. `— (estimasi dari 3.1, 3.2)`); one `2.x` group can summarize several estimate items at once, so this is a back-reference, not a 1:1 index reuse. Individual deliverables under a group are `2.x.1`, `2.x.2`, ....
-  - `3` **Catatan** — always exactly two fixed subsections: `3.1 Keputusan Teknis` (technical approach per `2.x` deliverable group) and `3.2 Perlu Konfirmasi` (open questions, indexed `3.2.1`, `3.2.2`, ...). There is no standalone Asumsi section — assumptions live inside `3.1`, attached to the deliverable group they support.
+  - `3` **Catatan** — two fixed subsections, each rendered only when it has content: `3.1 Keputusan Teknis` (technical approach per `2.x` deliverable group) and `3.2 Perlu Konfirmasi` (open questions, indexed `3.2.1`, `3.2.2`, ...). There is no standalone Asumsi section — assumptions live inside `3.1`, attached to the deliverable group they support. If there are no open questions, omit `3.2` altogether; if both are empty, omit Section 3.
   - `4` **Estimasi Waktu Pengerjaan & Investasi** — `4.1` a single combined table of total time + total price; `4.2`+ "Opsi Tambahan" (optional add-ons, each with its own description, before/after comparison table, and incremental time/price); final `4.x` "Catatan Estimasi" (exclusions and caveats).
   
   Indices are unique and stable — never renumber or reuse them. **A section with only one sub-item has no sub-index:** that item is the section's description. When more bullets are needed later, restructure the section (existing text becomes `x.1`, new item `x.2`).
+- **Don't render empty sections.** Any section or sub-section without meaningful content (an empty `3.2 Perlu Konfirmasi`, one holding only "Tidak ada"/"-", a `4.x` Opsi Tambahan or Catatan Estimasi with nothing to say) is left out entirely — no heading, no index, no placeholder. Remaining indices are never renumbered, and a fixed subsection that is the only one left (e.g. `3.1` alone) keeps its own index and heading. See "Omit Empty Sections" in `SKILL.md`.
 - **Show outputs, not derivation.** The full `AI Estimate → Quoted time → Price` derivation from the Pricing Method belongs in the estimate document's audit trail — it is not what goes into the client-facing quotation.
 
 ## Example
@@ -74,7 +75,8 @@ Versi: 2026.09.21.14.35  (selalu ada; diperbarui setiap quotation diubah)
 - Leaving sections unindexed, or using indices that don't follow the fixed 4-section structure.
 - Reintroducing a standalone "Asumsi" section instead of folding assumptions into `3.1 Keputusan Teknis`, attached to the deliverable group they support.
 - Numbering Deliverables at index `3` instead of `2`, or reusing an estimate Breakdown item's index directly on a `2.x` group instead of writing it as a back-reference (a `2.x` group can summarize several Breakdown items at once).
-- Merging `3.1 Keputusan Teknis` and `3.2 Perlu Konfirmasi` into one subsection, or omitting either one.
+- Merging `3.1 Keputusan Teknis` and `3.2 Perlu Konfirmasi` into one subsection.
+- Rendering an empty section or sub-section (e.g. a `3.2 Perlu Konfirmasi` with no questions, or with just "Tidak ada") instead of omitting it, or renumbering the remaining sections after omitting one.
 - Omitting the `Versi` datetime stamp from the meta, or not refreshing it when the quotation is updated.
 - Omitting the Deliverables section, or listing internal tasks/hours instead of outcomes the client will actually receive.
 - Defaulting to English (or any other language) instead of Indonesian without the user having explicitly asked for it.
