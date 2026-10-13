@@ -14,3 +14,5 @@ description: "Workspace Copilot instructions for the agent-skills repository."
 
 - **README sync**: When you add, remove, or modify any skill (including changes to its `SKILL.md`, description, or `version`), update `README.md`'s Skill Catalog table and any path or description references so the repository README reflects the change. Keep the table rows consistent (icon, skill name, short description, and path). This ensures users and agents can discover skills and see the correct version and location.
 
+- **Git workflow**: For this repository, always commit directly to `main` and push to `origin/main` — do not create feature branches or pull requests unless explicitly asked.
+
