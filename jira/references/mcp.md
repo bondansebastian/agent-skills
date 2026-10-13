@@ -61,6 +61,18 @@ mcp__atlassian__createJiraIssue(
 )
 ```
 
+> **Note — connected Atlassian MCP:** `mcp__claude_ai_Atlassian__createJiraIssue` has no top-level `timetracking` parameter. Pass it inside `additional_fields` instead (verified by creating a real issue and reading back `timetracking.originalEstimate`):
+>
+> ```
+> mcp__claude_ai_Atlassian__createJiraIssue(
+>   cloudId: "<cloud-id>",
+>   projectKey: "PROJ",
+>   issueTypeName: "Story",
+>   summary: "Implement user authentication",
+>   additional_fields: {"timetracking": {"originalEstimate": "5h"}}
+> )
+> ```
+
 #### `mcp__atlassian__editJiraIssue`
 Update an existing issue.
 
@@ -83,6 +95,16 @@ mcp__atlassian__editJiraIssue(
   timetracking: { originalEstimate: "6h" }
 )
 ```
+
+> **Note — connected Atlassian MCP:** `mcp__claude_ai_Atlassian__editJiraIssue` likewise has no top-level `timetracking` parameter. Its generic field map is named `fields` (not `additional_fields`), so nest `timetracking` there:
+>
+> ```
+> mcp__claude_ai_Atlassian__editJiraIssue(
+>   cloudId: "<cloud-id>",
+>   issueIdOrKey: "PROJ-123",
+>   fields: {"timetracking": {"originalEstimate": "6h"}}
+> )
+> ```
 
 ### Transition Operations
 
