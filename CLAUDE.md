@@ -14,5 +14,7 @@ description: "Workspace Copilot instructions for the agent-skills repository."
 
 - **README sync**: When you add, remove, or modify any skill (including changes to its `SKILL.md`, description, or `version`), update `README.md`'s Skill Catalog table and any path or description references so the repository README reflects the change. Keep the table rows consistent (icon, skill name, short description, and path). This ensures users and agents can discover skills and see the correct version and location.
 
+- **Marketplace sync**: `.claude-plugin/marketplace.json` publishes each skill as a Claude Code plugin. When you add, remove, rename, or change a skill, update its entry there too (`name`, `description`, `skills` path, and `version` matching the skill's `SKILL.md`), then run `claude plugin validate .` and fix any errors.
+
 - **Git workflow**: For this repository, always commit directly to `main` and push to `origin/main` — do not create feature branches or pull requests unless explicitly asked.
 

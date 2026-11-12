@@ -1,0 +1,134 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "bondansebastian-skills",
+  "owner": {
+    "name": "Bondan Sebastian",
+    "url": "https://github.com/bondansebastian"
+  },
+  "metadata": {
+    "description": "Curated agent skills encoding domain expertise, workflows, and high-quality execution patterns.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "agent-instructor",
+      "source": "./",
+      "description": "Refine or create AI/LLM agent instruction files (AGENTS.md, CLAUDE.md, copilot-instructions.md, .github/instructions) with zero information loss, machine-parsable structure, and token efficiency.",
+      "version": "1.0.0",
+      "category": "productivity",
+      "strict": false,
+      "skills": [
+        "./agent-instructor"
+      ]
+    },
+    {
+      "name": "confluence-knowledge-base",
+      "source": "./",
+      "description": "Build and maintain a product-focused Confluence knowledge base that is accessible to design, engineering, sales, and support.",
+      "version": "1.0.1",
+      "category": "documentation",
+      "strict": false,
+      "skills": [
+        "./confluence-knowledge-base"
+      ]
+    },
+    {
+      "name": "devops",
+      "source": "./",
+      "description": "Manage Coolify (via the Coolify MCP server or CLI) and Oracle Cloud Infrastructure (oci CLI plus bastion-tunnel SSH/SCP workflow) by natural language.",
+      "version": "1.5.0",
+      "category": "devops",
+      "strict": false,
+      "skills": [
+        "./devops"
+      ]
+    },
+    {
+      "name": "estimate-project",
+      "source": "./",
+      "description": "Create, name, and maintain structured client estimate documents under docs/estimates/ with a required AI Estimate row and traceable Scope/Assumptions/Breakdown sections.",
+      "version": "1.5.0",
+      "category": "productivity",
+      "strict": false,
+      "skills": [
+        "./estimate-project"
+      ]
+    },
+    {
+      "name": "install-atlassian-rovo-mcp",
+      "source": "./",
+      "description": "Guide Atlassian Rovo MCP installation with setup discovery first, then project-local or multi-project instructions tailored to OS/runtime.",
+      "version": "1.0.0",
+      "category": "integrations",
+      "strict": false,
+      "skills": [
+        "./install-atlassian-rovo-mcp"
+      ]
+    },
+    {
+      "name": "jira",
+      "source": "./",
+      "description": "Natural-language Jira assistant for viewing, creating, and updating issues via CLI or MCP backends, with native Original Estimate handling.",
+      "version": "1.0.6",
+      "category": "integrations",
+      "strict": false,
+      "skills": [
+        "./jira"
+      ]
+    },
+    {
+      "name": "laravel8-guidelines",
+      "source": "./",
+      "description": "Coding guidelines and best practices for Laravel 8.x projects covering Eloquent, routing, validation, security, testing, and queues.",
+      "category": "development",
+      "strict": false,
+      "skills": [
+        "./laravel8-guidelines"
+      ]
+    },
+    {
+      "name": "react-best-practices",
+      "source": "./",
+      "description": "Opinionated React component architecture: SRP-driven splits, colocation, state isolation, explicit props, naming conventions, and file-size targets.",
+      "version": "1.0.1",
+      "category": "development",
+      "strict": false,
+      "skills": [
+        "./react-best-practices"
+      ]
+    },
+    {
+      "name": "ui-ux-best-practices",
+      "source": "./",
+      "description": "Hover feedback on every clickable element, smoothly animated micro-interactions, and accessible motion preferences.",
+      "version": "1.0.2",
+      "category": "development",
+      "strict": false,
+      "skills": [
+        "./ui-ux-best-practices"
+      ]
+    },
+    {
+      "name": "writing-quotations",
+      "source": "./",
+      "description": "Turn an AI Estimate into a client-facing quotation using a remembered per-project pricing formula, write Indonesian-by-default quotations, and manage Zoho Books estimates.",
+      "version": "1.12.0",
+      "category": "productivity",
+      "strict": false,
+      "skills": [
+        "./writing-quotations"
+      ]
+    },
+    {
+      "name": "writing-user-guide",
+      "source": "./",
+      "description": "Write end-user guides and help articles in plain business language with step-by-step screenshots, optionally publishing to Notion via notion-cli.",
+      "version": "1.12.0",
+      "category": "documentation",
+      "strict": false,
+      "skills": [
+        "./writing-user-guide"
+      ]
+    }
+  ]
+}

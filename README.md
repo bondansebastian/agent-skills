@@ -16,6 +16,35 @@ Each skill lives in its own folder and contains a `SKILL.md` file with:
 - Step-by-step workflow and best practices
 - Templates, examples, and pitfalls
 
+## Install with Claude Code (Plugin Marketplace)
+
+This repository is a [Claude Code plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces) (`.claude-plugin/marketplace.json`). Every skill is published as its own plugin, so you install only what you need.
+
+Add the marketplace once, then install skills by name:
+
+````text
+/plugin marketplace add bondansebastian/agent-skills
+/plugin install jira@bondansebastian-skills
+````
+
+Or install any skill in one step (Claude Code 2.1.275 or later):
+
+````text
+/plugin install agent-instructor --marketplace bondansebastian/agent-skills
+/plugin install confluence-knowledge-base --marketplace bondansebastian/agent-skills
+/plugin install devops --marketplace bondansebastian/agent-skills
+/plugin install estimate-project --marketplace bondansebastian/agent-skills
+/plugin install install-atlassian-rovo-mcp --marketplace bondansebastian/agent-skills
+/plugin install jira --marketplace bondansebastian/agent-skills
+/plugin install laravel8-guidelines --marketplace bondansebastian/agent-skills
+/plugin install react-best-practices --marketplace bondansebastian/agent-skills
+/plugin install ui-ux-best-practices --marketplace bondansebastian/agent-skills
+/plugin install writing-quotations --marketplace bondansebastian/agent-skills
+/plugin install writing-user-guide --marketplace bondansebastian/agent-skills
+````
+
+Update later with `/plugin marketplace update bondansebastian-skills`. Other agents can keep using the `npx skills add` commands in the catalog below.
+
 ## Skill Catalog
 
 | Skill | Description | Path | Install |
@@ -37,6 +66,8 @@ Each skill lives in its own folder and contains a `SKILL.md` file with:
 ```text
 agent-skills/
 ├── README.md
+├── .claude-plugin/
+│   └── marketplace.json
 ├── confluence-knowledge-base/
 │   └── SKILL.md
 ├── jira/
